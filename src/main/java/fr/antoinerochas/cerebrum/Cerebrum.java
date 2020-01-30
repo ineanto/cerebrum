@@ -91,8 +91,8 @@ public class Cerebrum
 
         // Launch Cerebrum.
         LOGGER.info("Starting " + APP + " " + VERSION + "...");
-        LOGGER.info("(c) 2020-present Antoine \"Aro\" ROCHAS.");
-        LOGGER.info("Loading Cerebrum...");
+        LOGGER.info(APP + " (c) 2020-present Antoine \"Aro\" ROCHAS.");
+        LOGGER.info("Loading " + APP + "...");
 
         // Instantiate JDAManager.
         JDAManager jdaManager = new JDAManager();
