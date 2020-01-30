@@ -1,8 +1,5 @@
 package fr.antoinerochas.cerebrum.user;
 
-import fr.antoinerochas.cerebrum.Cerebrum;
-import fr.antoinerochas.cerebrum.order.OrderManager;
-import fr.antoinerochas.cerebrum.order.OrderStatus;
 import net.dv8tion.jda.api.JDA;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +34,5 @@ public class UserManager
         LOGGER.debug("Instantiating UserManager...");
         // Define the JDA instance.
         this.jda = jda;
-        this.setStatus(OrderStatus.AVAILABLE);
     }
 }

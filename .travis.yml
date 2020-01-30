@@ -1,6 +1,6 @@
 language: java
 
+os: linux
+
 jdk:
   - openjdk13
-
-sudo: false
