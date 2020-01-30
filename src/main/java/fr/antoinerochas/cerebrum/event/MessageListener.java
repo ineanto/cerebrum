@@ -1,0 +1,27 @@
+package fr.antoinerochas.cerebrum.event;
+
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
+/**
+ * This file is part of Cerebrum.
+ *
+ * @author Aro at/on 30/01/2020
+ * @since 1.0
+ */
+public class MessageListener extends ListenerAdapter
+{
+    /**
+     * Listen for an event.
+     * @param event the {@link MessageReceivedEvent} event
+     */
+     @Override
+    public void onMessageReceived(MessageReceivedEvent event)
+    {
+        // If the message received is in DMs
+        if(event.isFromType(ChannelType.PRIVATE))
+        {
+        }
+    }
+}
