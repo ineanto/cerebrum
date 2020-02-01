@@ -1,7 +1,11 @@
 package fr.antoinerochas.cerebrum.order;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
+import fr.antoinerochas.cerebrum.i18n.I18NManager;
+import fr.antoinerochas.cerebrum.i18n.Language;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,13 +40,32 @@ public class OrderManager
      */
     public OrderManager(JDA jda)
     {
-        LOGGER.debug("Instantiating OrderManger...");
+        LOGGER.debug("Loading OrderManger...");
         // Define JDA instance.
         this.jda = jda;
         // If we're under Debug Mode, set the status in consequence.
         if (Cerebrum.DEBUG) { this.setStatus(OrderStatus.DEBUG); return; }
         //Else, set OrderManager under the default status.
         this.setStatus(OrderStatus.AVAILABLE);
+    }
+
+    /**
+     * Start the order process from a {@link User}.
+     *
+     * @param user the user that took an {@link Order}
+     */
+    public void startOrderProcess(User user)
+    {
+        // If orders are disabled, tell the user!
+        if (status != OrderStatus.AVAILABLE)
+        {
+            Language language = I18NManager.getUserLanguage(user);
+            PrivateChannel channel = user.openPrivateChannel().complete();
+            //channel.sendMessage()
+            return;
+        }
+
+        LOGGER.info("Taking order from " + user.getName() + "(" + user.getId() + ")...");
     }
 
     /**

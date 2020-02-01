@@ -3,6 +3,7 @@ package fr.antoinerochas.cerebrum;
 import fr.antoinerochas.cerebrum.config.ConfigManager;
 import fr.antoinerochas.cerebrum.jda.JDAManager;
 import fr.antoinerochas.cerebrum.order.OrderManager;
+import fr.antoinerochas.cerebrum.user.UserManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import org.apache.logging.log4j.Level;
@@ -44,6 +45,11 @@ public class Cerebrum
     public static final String VERSION = "1.0-SNAPSHOT";
 
     /**
+     * {@code Cerebrum}'s prefix.
+     */
+    public static final String PREFIX = "?";
+
+    /**
      * Determines if {@code Cerebrum} is in debug mode. <p>
      * Enabling debug will provide additional information <p>
      * about {@code Cerebrum}'s work, requests, activities and much more.
@@ -71,6 +77,16 @@ public class Cerebrum
      * {@code Cerebrum} is currently using.
      */
     private static JDA jda;
+
+    /**
+     * The {@link OrderManager} instance.
+     */
+    private static OrderManager orderManager;
+
+    /**
+     * The {@link UserManager} instance.
+     */
+    private static UserManager userManager;
 
     /**
      * Java's application entry point.
@@ -119,7 +135,7 @@ public class Cerebrum
             LOGGER.info("Guild found (name=\"" + GUILD.getName() + "\",id=" + manager.getGuildId() + ").");
 
             // Getting channels from configuration.
-            if(manager.getLogChannelId().isEmpty())
+            if (manager.getLogChannelId().isEmpty())
             {
                 LOGGER.warn("Log channel is not defined. Cerebrum will not log activity.");
             }
@@ -133,10 +149,11 @@ public class Cerebrum
 
             // Everything's all right !
             LOGGER.info("Done.");
-            LOGGER.info("Loading OrderManager...");
 
-            // Instantiate and load OrderManager.
-            OrderManager orderManager = new OrderManager(jda);
+            // Set and load OrderManager instance.
+            orderManager = new OrderManager(jda);
+            // Set and load UserManager instance.
+            userManager = new UserManager(jda);
 
             // When everything finished loading
             // add a shutdown hook and let live.
@@ -173,5 +190,35 @@ public class Cerebrum
         // Logging and then stop.
         LOGGER.info("Stopping Cerebrum...");
         jda.shutdown();
+    }
+
+    /**
+     * Get {@link JDA}'s instance.
+     *
+     * @return {@link JDA}'s instance
+     */
+    public static JDA getJDA()
+    {
+        return jda;
+    }
+
+    /**
+     * Get {@link OrderManager}'s instance.
+     *
+     * @return {@link OrderManager}'s instance
+     */
+    public static OrderManager getOrderManager()
+    {
+        return orderManager;
+    }
+
+    /**
+     * Get {@link UserManager}'s instance.
+     *
+     * @return {@link UserManager}'s instance
+     */
+    public static UserManager getUserManager()
+    {
+        return userManager;
     }
 }

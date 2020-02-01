@@ -1,7 +1,10 @@
 package fr.antoinerochas.cerebrum.i18n;
 
 import com.google.gson.reflect.TypeToken;
+import fr.antoinerochas.cerebrum.Cerebrum;
 import fr.antoinerochas.cerebrum.json.GsonManager;
+import fr.antoinerochas.cerebrum.user.UserData;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,5 +82,22 @@ public class I18NManager
     {
         // Same, but default the language to English.
         return getValue(Language.ENGLISH, key);
+    }
+
+    /**
+     * Get the user's language.
+     *
+     * @param user the user
+     * @return user's language
+     */
+    public static Language getUserLanguage(User user)
+    {
+        UserData data = Cerebrum.getUserManager().loadUserData(user);
+
+        if (data == null)
+            // By default, return the English language.
+            return Language.ENGLISH;
+
+        return data.getLanguage();
     }
 }

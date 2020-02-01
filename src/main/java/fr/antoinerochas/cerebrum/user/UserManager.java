@@ -1,6 +1,7 @@
 package fr.antoinerochas.cerebrum.user;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,8 +32,22 @@ public class UserManager
      */
     public UserManager(JDA jda)
     {
-        LOGGER.debug("Instantiating UserManager...");
+        LOGGER.debug("Loading UserManager...");
         // Define the JDA instance.
         this.jda = jda;
+    }
+
+    /**
+     * Load's a {@link User}'s data.
+     *
+     * @param user the user that we have to load data from
+     * @return {@link UserData}'s instance containing all user data
+     */
+    public UserData loadUserData(User user)
+    {
+
+
+        // If we don't succeed to load user's data, return nothing.
+        return null;
     }
 }
