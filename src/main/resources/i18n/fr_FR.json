@@ -1,4 +1,6 @@
 {
   "appEnabled": "{0} a été lancé(e).",
-  "appShutdown": "{0} c'est arrêté."
+  "appShutdown": "{0} c'est arrêté.",
+  "orderUnavailable": "Nous sommes désolés, mais vous ne pouvez pas commander maintenant.",
+  "orderNullValue": "N/A"
 }

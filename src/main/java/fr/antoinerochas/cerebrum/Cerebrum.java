@@ -150,10 +150,10 @@ public class Cerebrum
             // Everything's all right !
             LOGGER.info("Done.");
 
-            // Set and load OrderManager instance.
-            orderManager = new OrderManager(jda);
             // Set and load UserManager instance.
             userManager = new UserManager(jda);
+            // Set and load OrderManager instance.
+            orderManager = new OrderManager(jda);
 
             // When everything finished loading
             // add a shutdown hook and let live.
@@ -170,7 +170,7 @@ public class Cerebrum
                 // ...scan user's input for "stop".
                 Scanner scanner = new Scanner(System.in);
                 String input = scanner.nextLine();
-                if (input.equals("stop")) { System.exit(0); }
+                if (input.equals("stop")) { exit(); }
             }
         }
         catch (LoginException | InterruptedException ex)
@@ -183,10 +183,11 @@ public class Cerebrum
     }
 
     /**
-     * Exits gracefully {@code Cerebrum}.
+     * Gracefully exits {@code Cerebrum}.
      */
     private static void exit()
     {
+        RUNNING = false;
         // Logging and then stop.
         LOGGER.info("Stopping Cerebrum...");
         jda.shutdown();

@@ -1,7 +1,5 @@
 package fr.antoinerochas.cerebrum.order;
 
-import java.util.Date;
-
 /**
  * This file is part of Cerebrum.
  * Represent an Order.
@@ -24,12 +22,12 @@ public class Order
     /**
      * Order's date.
      */
-    private Date date;
+    private long date;
 
     /**
      * Order's deadline.
      */
-    private Date deadline;
+    private long deadline;
 
     /**
      * Constructor.
@@ -39,7 +37,7 @@ public class Order
      * @param date        order's date
      * @param deadline    order's deadline
      */
-    protected Order(String customerId, String description, Date date, Date deadline)
+    public Order(String customerId, String description, long date, long deadline)
     {
         // Define parameters.
         this.customerId = customerId;
@@ -47,8 +45,7 @@ public class Order
         this.date = date;
         this.deadline = deadline;
     }
-    
-    // TODO: 01/02/2020 JavaDoc ?
+
     public String getCustomerId()
     {
         return customerId;
@@ -69,22 +66,22 @@ public class Order
         this.description = description;
     }
 
-    public Date getDate()
+    public long getDate()
     {
         return date;
     }
 
-    public void setDate(Date date)
+    public void setDate(long date)
     {
         this.date = date;
     }
 
-    public Date getDeadline()
+    public long getDeadline()
     {
         return deadline;
     }
 
-    public void setDeadline(Date deadline)
+    public void setDeadline(long deadline)
     {
         this.deadline = deadline;
     }

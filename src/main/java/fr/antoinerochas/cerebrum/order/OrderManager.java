@@ -2,7 +2,7 @@ package fr.antoinerochas.cerebrum.order;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
 import fr.antoinerochas.cerebrum.i18n.I18NManager;
-import fr.antoinerochas.cerebrum.i18n.Language;
+import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -56,12 +56,15 @@ public class OrderManager
      */
     public void startOrderProcess(User user)
     {
-        // If orders are disabled, tell the user!
+        // TODO: 27/02/2020 Finish eventually...
+
+        // If orders are disabled, tell the user.
         if (status != OrderStatus.AVAILABLE)
         {
-            Language language = I18NManager.getUserLanguage(user);
-            PrivateChannel channel = user.openPrivateChannel().complete();
-            //channel.sendMessage()
+            final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
+            final PrivateChannel channel = user.openPrivateChannel().complete();
+            channel.sendMessage(I18NManager.getValue(cerebrumUser.getUserLanguage(), "orderUnavailable")).queue();
+            channel.close().queue();
             return;
         }
 

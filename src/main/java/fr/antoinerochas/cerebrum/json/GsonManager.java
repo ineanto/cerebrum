@@ -24,6 +24,11 @@ public class GsonManager
     public static final Logger LOGGER = LogManager.getLogger(GsonManager.class);
 
     /**
+     * Google's {@link Gson} instance.
+     */
+    public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+
+    /**
      * Read a JSON file, maps it as {@code T} <p>
      * and return the mapped {@link Object}.
      *
@@ -35,11 +40,11 @@ public class GsonManager
     public static <T> T loadFile(Reader reader, Type type)
     {
         LOGGER.debug("Instantiating Gson...");
-        // Instantiate Gson.
-        Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+        // Get Gson's instance.
+
         // Get the object from the specified type as a T object.
         LOGGER.debug("Mapping the JSON file to -> " + type.getTypeName());
         // Return the mapped file as an Object.
-        return gson.fromJson(reader, type);
+        return GSON.fromJson(reader, type);
     }
 }

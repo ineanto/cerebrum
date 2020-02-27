@@ -1,4 +1,6 @@
 {
   "appEnabled": "{0} has been started.",
-  "appShutdown": "{0} is shutting down."
+  "appShutdown": "{0} is shutting down.",
+  "orderUnavailable": "We're sorry, but you can't order now.",
+  "orderNullValue": "N/A"
 }

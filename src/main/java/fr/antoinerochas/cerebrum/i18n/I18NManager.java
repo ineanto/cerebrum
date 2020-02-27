@@ -3,7 +3,7 @@ package fr.antoinerochas.cerebrum.i18n;
 import com.google.gson.reflect.TypeToken;
 import fr.antoinerochas.cerebrum.Cerebrum;
 import fr.antoinerochas.cerebrum.json.GsonManager;
-import fr.antoinerochas.cerebrum.user.UserData;
+import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +29,8 @@ public class I18NManager
     public static final Logger LOGGER = LogManager.getLogger(I18NManager.class);
 
     /**
-     * Get a value associated to <p>
+     * Get a value associated to
+     * <p>
      * the {@code key} from language file.
      *
      * @param key the value's key
@@ -72,7 +73,8 @@ public class I18NManager
     }
 
     /**
-     * Get a value associated with the <p>
+     * Get a value associated with the
+     * <p>
      * {@code key} from the default English language file.
      *
      * @param key the value's key
@@ -92,12 +94,12 @@ public class I18NManager
      */
     public static Language getUserLanguage(User user)
     {
-        UserData data = Cerebrum.getUserManager().loadUserData(user);
+        CerebrumUser cerebrumUser = Cerebrum.getUserManager().loadUser(user);
 
-        if (data == null)
-            // By default, return the English language.
-            return Language.ENGLISH;
+        // By default, return the English language.
+        if (user == null) return Language.ENGLISH;
+        if (cerebrumUser == null) return Language.ENGLISH;
 
-        return data.getLanguage();
+        return Language.values()[cerebrumUser.getLanguage()];
     }
 }
