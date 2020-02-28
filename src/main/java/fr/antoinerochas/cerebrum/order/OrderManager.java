@@ -58,17 +58,27 @@ public class OrderManager
     {
         // TODO: 27/02/2020 Finish eventually...
 
+        final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
+        final PrivateChannel channel = user.openPrivateChannel().complete();
+
         // If orders are disabled, tell the user.
         if (status != OrderStatus.AVAILABLE)
         {
-            final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
-            final PrivateChannel channel = user.openPrivateChannel().complete();
-            channel.sendMessage(I18NManager.getValue(cerebrumUser.getUserLanguage(), "orderUnavailable")).queue();
-            channel.close().queue();
+            if (cerebrumUser.isOperator())
+            {
+                LOGGER.debug("User " + user.getId() + " is OP, letting user take order from FDB");
+                channel.sendMessage(I18NManager.getValue(cerebrumUser.getUserLanguage(), "orderUnavailable")).complete();
+                channel.close().complete();
+                return;
+            }
+
+            channel.sendMessage(I18NManager.getValue(cerebrumUser.getUserLanguage(), "orderUnavailable")).complete();
+            channel.close().complete();
             return;
         }
 
         LOGGER.info("Taking order from " + user.getName() + "(" + user.getId() + ")...");
+        channel.close().complete();
     }
 
     /**
@@ -78,7 +88,6 @@ public class OrderManager
      */
     public void setStatus(OrderStatus status)
     {
-        LOGGER.debug("Modifying OMS " + this.status.name() + " -> " + status.name());
         this.status = status;
         // Print the status change.
         LOGGER.info("OrderManager Status has been switched to " + status.name() + ". Applying changes...");

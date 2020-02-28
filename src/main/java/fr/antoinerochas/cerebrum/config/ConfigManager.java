@@ -32,17 +32,11 @@ public class ConfigManager
     private static File configuration;
 
     /**
-     * Private constructor to prevent unwanted initialization.
-     */
-    private ConfigManager() {}
-
-    /**
      * Loads the configuration file and <p>
      * return an instance of {@link ConfigManager}.
      *
-     * @return an instance of {@link ConfigManager}
      */
-    public static ConfigManager loadConfiguration() throws IOException
+    public void loadConfiguration() throws IOException
     {
         File file = new File("./config.json");
         InputStream resource = ClassLoader.getSystemResourceAsStream("config.json");
@@ -55,9 +49,6 @@ public class ConfigManager
         }
 
         configuration = file;
-
-        // Return a new instance of ConfigManager.
-        return new ConfigManager();
     }
 
     /**
@@ -95,9 +86,9 @@ public class ConfigManager
      *
      * @return all the bot operators as a {@link ArrayList}
      */
-    public ArrayList<?> getOperatorsIds()
+    public ArrayList<String> getOperatorsIds()
     {
-        return (ArrayList<?>) getValue("operators");
+        return (ArrayList<String>) getValue("operators");
     }
 
     /**
@@ -109,20 +100,21 @@ public class ConfigManager
      */
     public Object getValue(String key)
     {
-        LOGGER.debug("Reading " + key + " from the configuration...");
+        LOGGER.debug("Reading \"" + key + "\" from the configuration...");
         // Instantiate an HashMap type.
         final Type hashMapType = new TypeToken<HashMap<String, Object>>() {}.getType();
 
         // Try to create a reader from the language file.
         try (BufferedReader reader = new BufferedReader(new FileReader(configuration)))
         {
-            LOGGER.debug("Typing object...");
             // Read the JSON file and convert it's contents into an HashMap.
             final HashMap<String, Object> map = GsonManager.loadFile(reader, hashMapType);
-            LOGGER.debug("Typed successfully, returning key.");
 
             // Get the value from the Map according to the key.
             final Object value = map.get(key);
+
+            // Some log.
+            LOGGER.debug("Successfully read \"" + key + "\" from configuration.");
 
             // If the key is null, return the key and give an error in console.
             if (value == null)

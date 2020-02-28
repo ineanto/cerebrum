@@ -29,8 +29,7 @@ public class I18NManager
     public static final Logger LOGGER = LogManager.getLogger(I18NManager.class);
 
     /**
-     * Get a value associated to
-     * <p>
+     * Get a value associated to <p>
      * the {@code key} from language file.
      *
      * @param key the value's key
@@ -38,20 +37,21 @@ public class I18NManager
      */
     public static String getValue(Language language, String key)
     {
-        LOGGER.debug("Reading I18N key (lang=" + language.getCode() + ",key=" + key + ")...");
+        LOGGER.debug("Getting key (lang=" + language.getCode() + ",key=" + key + ")...");
         // Instantiate an HashMap type.
         final Type hashMapType = new TypeToken<HashMap<String, String>>() {}.getType();
 
         // Try to create a reader from the language file.
         try (BufferedReader reader = new BufferedReader(new FileReader(language.getFile())))
         {
-            LOGGER.debug("Typing object...");
             // Read the JSON file and convert it's contents into an HashMap.
             final HashMap<String, String> map = GsonManager.loadFile(reader, hashMapType);
-            LOGGER.debug("Typed successfully, returning key.");
 
             // Get the value from the Map according to the key.
             final String value = map.get(key);
+
+            // Some log.
+            LOGGER.debug("Successfully read \"" + key + "\" from Lang File.");
 
             // If the key is null, return the key and give an error in console.
             if (value == null)
@@ -94,10 +94,9 @@ public class I18NManager
      */
     public static Language getUserLanguage(User user)
     {
-        CerebrumUser cerebrumUser = Cerebrum.getUserManager().loadUser(user);
+        CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
 
         // By default, return the English language.
-        if (user == null) return Language.ENGLISH;
         if (cerebrumUser == null) return Language.ENGLISH;
 
         return Language.values()[cerebrumUser.getLanguage()];

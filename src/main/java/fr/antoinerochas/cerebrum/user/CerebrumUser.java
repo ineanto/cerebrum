@@ -1,7 +1,9 @@
 package fr.antoinerochas.cerebrum.user;
 
+import fr.antoinerochas.cerebrum.Cerebrum;
 import fr.antoinerochas.cerebrum.i18n.Language;
 import fr.antoinerochas.cerebrum.order.Order;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.ArrayList;
 
@@ -14,41 +16,51 @@ import java.util.ArrayList;
 public class CerebrumUser
 {
     /**
+     * Represent user's Discord id.
+     */
+    private String id;
+
+    /**
      * Represent user's preferred language.
      */
     private int language;
+
+    /**
+     * Represent user's orders.
+     */
+    private ArrayList<Order> orders;
 
     /**
      * Represent user's last order timestamp.
      */
     private long lastOrdered;
 
-    /**
-     * Represent user's orders.
-     */
-    private final ArrayList<Order> orders;
-
-    /**
-     * Represent user's Discord id.
-     */
-    private transient final String id;
-
-    public CerebrumUser(int language, ArrayList<Order> orders, long lastOrdered, String id)
+    public CerebrumUser(String id, int language, ArrayList<Order> orders, long lastOrdered)
     {
+        this.id = id;
         this.language = language;
         this.orders = orders;
         this.lastOrdered = lastOrdered;
-        this.id = id;
     }
 
-    public int getLanguage()
+    /**
+     * Tells if a {@link User} is a {@code Cerebrum}'s operator.
+     *
+     * @return {@link Boolean#TRUE} if it is, {@link Boolean#FALSE} otherwise
+     */
+    public boolean isOperator()
     {
-        return language;
+        return Cerebrum.getConfigManager().getOperatorsIds().contains(id);
     }
 
     public Language getUserLanguage()
     {
         return Language.values()[language];
+    }
+
+    public int getLanguage()
+    {
+        return language;
     }
 
     public void setLanguage(int language)
@@ -71,8 +83,29 @@ public class CerebrumUser
         return orders;
     }
 
+    public void setOrders(ArrayList<Order> orders)
+    {
+        this.orders = orders;
+    }
+
     public String getId()
     {
         return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "CerebrumUser{" +
+                "id='" + id + '\'' +
+                ", language=" + language +
+                ", orders=" + orders +
+                ", lastOrdered=" + lastOrdered +
+                '}';
     }
 }

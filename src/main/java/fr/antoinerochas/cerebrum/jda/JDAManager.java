@@ -1,5 +1,6 @@
 package fr.antoinerochas.cerebrum.jda;
 
+import fr.antoinerochas.cerebrum.event.MessageListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -62,6 +63,7 @@ public class JDAManager
         LOGGER.info("Building Bot...");
 
         // Modify some attributes.
+        builder.addEventListeners(new MessageListener());
         builder.setDisabledCacheFlags(EnumSet.of(CacheFlag.VOICE_STATE)); // Don't cache user's voice state.
         builder.setActivity(Activity.watching("you !")); // Modify bot's activity.
         builder.setStatus(OnlineStatus.ONLINE); // Set his status to Online.

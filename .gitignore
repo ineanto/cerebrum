@@ -3,6 +3,11 @@
 # Compiled class file
 *.class
 
+# Cerebrum
+logs/
+users/
+config.json
+
 # Log file
 *.log
 

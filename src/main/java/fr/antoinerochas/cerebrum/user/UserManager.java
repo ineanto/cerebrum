@@ -1,6 +1,5 @@
 package fr.antoinerochas.cerebrum.user;
 
-import com.google.gson.reflect.TypeToken;
 import fr.antoinerochas.cerebrum.i18n.Language;
 import fr.antoinerochas.cerebrum.json.GsonManager;
 import net.dv8tion.jda.api.JDA;
@@ -9,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,9 +37,14 @@ public class UserManager
     private final HashMap<String, CerebrumUser> users = new HashMap<>();
 
     /**
+     * Represents {@code Cerebrum}'s operators.
+     */
+    private final ArrayList<String> operators = new ArrayList<>();
+
+    /**
      * Represents user data directory.
      */
-    private final File userDirectory = new File("./user/");
+    private final File userDirectory = new File("./users/");
 
     /**
      * Constructor.
@@ -62,6 +65,12 @@ public class UserManager
      */
     public CerebrumUser getUser(User user)
     {
+        if (users.get(user.getId()) == null)
+        {
+            LOGGER.info("User " + user.getId() + " is not into cache, loading user in consequence");
+            loadUser(user);
+        }
+
         return users.get(user.getId());
     }
 
@@ -72,31 +81,25 @@ public class UserManager
      */
     private void loadUser(User user)
     {
-        // Get user's file.
-        final File userFile = getUserFile(user);
-
         if (checkUserDataFolder())
         {
-            boolean validUserData = false;
-            if (!userFile.exists())
-            {
-                validUserData = createUserData(user);
-            }
+            // Get user's file.
+            final File userFile = getUserFile(user);
+
+            boolean validUserData = createUserData(user);
 
             if (validUserData)
             {
-                // Load the file and return it as CerebrumUser object.
-                final Type cerebrumUserType = new TypeToken<CerebrumUser>() {}.getType();
-
                 try
                 {
-                    CerebrumUser cerebrumUser = GsonManager.loadFile(new BufferedReader(new FileReader(userFile)), cerebrumUserType);
-                    users.putIfAbsent(cerebrumUser.getId(), cerebrumUser);
+                    CerebrumUser cerebrumUser = GsonManager.loadFile(new BufferedReader(new FileReader(userFile)), CerebrumUser.class);
+                    users.put(cerebrumUser.getId(), cerebrumUser);
+                    LOGGER.info("Successfully loaded user " + user.getId());
                 }
                 catch (FileNotFoundException e)
                 {
-                    LOGGER.error("Failed to load user " + user.getId() + "!");
-                    e.printStackTrace();
+                    LOGGER.error("Failed to load user " + user.getId() + "!", e);
+                    System.exit(-1);
                 }
             }
         }
@@ -109,16 +112,19 @@ public class UserManager
      */
     public boolean createUserData(User user)
     {
-        // Get user's file.
-        final File userFile = getUserFile(user);
-
         if (checkUserDataFolder())
         {
+            // Get user's file.
+            final File userFile = getUserFile(user);
+
+            // If the file already exists, return true.
+            if (userFile.exists()) { return true; }
+
             // Some logs.
             LOGGER.info("Creating data for user " + user.getId() + "...");
 
             // Instantiate CerebrumUser and turn it to JSON.
-            final CerebrumUser cerebrumUser = new CerebrumUser(Language.ENGLISH.ordinal(), new ArrayList<>(), -1, user.getId());
+            final CerebrumUser cerebrumUser = new CerebrumUser(user.getId(), Language.ENGLISH.ordinal(), new ArrayList<>(), -1);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile)))
             {
                 // Create the file if it does not exists.
@@ -133,8 +139,8 @@ public class UserManager
             }
             catch (IOException e)
             {
-                LOGGER.error("Failed to create data for user " + user.getId() + "!");
-                e.printStackTrace();
+                LOGGER.error("Failed to create data for user " + user.getId() + "!", e);
+                System.exit(-1);
                 return false;
             }
         }

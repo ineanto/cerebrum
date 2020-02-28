@@ -1,5 +1,7 @@
 package fr.antoinerochas.cerebrum;
 
+import fr.antoinerochas.cerebrum.api.CommandManager;
+import fr.antoinerochas.cerebrum.command.OrderCommand;
 import fr.antoinerochas.cerebrum.config.ConfigManager;
 import fr.antoinerochas.cerebrum.jda.JDAManager;
 import fr.antoinerochas.cerebrum.order.OrderManager;
@@ -89,6 +91,16 @@ public class Cerebrum
     private static UserManager userManager;
 
     /**
+     * The {@link ConfigManager} instance.
+     */
+    private static ConfigManager configManager;
+
+    /**
+     * The {@link CommandManager} instance.
+     */
+    private static CommandManager commandManager;
+
+    /**
      * Java's application entry point.
      *
      * @param args arguments
@@ -113,47 +125,50 @@ public class Cerebrum
         // Instantiate JDAManager.
         JDAManager jdaManager = new JDAManager();
         // Instantiate ConfigManager.
-        ConfigManager manager = ConfigManager.loadConfiguration();
+        configManager = new ConfigManager();
+        configManager.loadConfiguration();
 
         // Try to connect to JDA!
         try
         {
             // Connection succeeded!
             jda = jdaManager.login();
-            LOGGER.info("Connection succeeded.");
+            LOGGER.info("Logged into JDA.");
 
             // Checking channels validity...
-            LOGGER.info("Checking configuration...");
+            LOGGER.info("Checking channels...");
 
-            GUILD = jda.getGuildById(manager.getGuildId());
+            final String guildId = configManager.getGuildId();
+            GUILD = jda.getGuildById(guildId);
             if (GUILD == null)
             {
-                LOGGER.error("Can't find Guild/Server with ID: " + manager.getGuildId() + "!");
+                LOGGER.error("Can't find Guild/Server with ID: " + guildId + "!");
                 System.exit(-1);
                 return;
             }
-            LOGGER.info("Guild found (name=\"" + GUILD.getName() + "\",id=" + manager.getGuildId() + ").");
+            LOGGER.info("Guild found (name=\"" + GUILD.getName() + "\", id=" + GUILD.getId() + ").");
 
             // Getting channels from configuration.
-            if (manager.getLogChannelId().isEmpty())
+            if (configManager.getLogChannelId().isEmpty())
             {
                 LOGGER.warn("Log channel is not defined. Cerebrum will not log activity.");
             }
 
-            if (manager.getOrderChannelId().isEmpty())
+            if (configManager.getOrderChannelId().isEmpty())
             {
                 LOGGER.info("Order channel's not been set. Please configure one before proceeding.");
                 System.exit(-1);
                 return;
             }
 
-            // Everything's all right !
-            LOGGER.info("Done.");
-
             // Set and load UserManager instance.
             userManager = new UserManager(jda);
             // Set and load OrderManager instance.
             orderManager = new OrderManager(jda);
+            // Set and load OrderManager instance.
+            commandManager = new CommandManager();
+
+            commandManager.register(new OrderCommand());
 
             // When everything finished loading
             // add a shutdown hook and let live.
@@ -170,7 +185,7 @@ public class Cerebrum
                 // ...scan user's input for "stop".
                 Scanner scanner = new Scanner(System.in);
                 String input = scanner.nextLine();
-                if (input.equals("stop")) { exit(); }
+                if (input.equals("stop")) { System.exit(0); }
             }
         }
         catch (LoginException | InterruptedException ex)
@@ -222,4 +237,21 @@ public class Cerebrum
     {
         return userManager;
     }
+
+    /**
+     * Get {@link ConfigManager}'s instance.
+     *
+     * @return {@link ConfigManager}'s instance
+     */
+    public static ConfigManager getConfigManager()
+    {
+        return configManager;
+    }
+
+    /**
+     * Get {@link CommandManager}'s instance.
+     *
+     * @return {@link CommandManager}'s instance
+     */
+    public static CommandManager getCommandManager() { return commandManager; }
 }
