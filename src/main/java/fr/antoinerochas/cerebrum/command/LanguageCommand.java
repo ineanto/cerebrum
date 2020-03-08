@@ -53,8 +53,8 @@ public class LanguageCommand
         final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
         final PrivateChannel channel = user.openPrivateChannel().complete();
 
-        MessageEmbed.Field selectLanguage = new MessageEmbed.Field(I18NManager.getValue(cerebrumUser.getUserLanguage(), "langSelectionSuccessDesc"), I18NManager.getValue(cerebrumUser.getUserLanguage(), "langUpdated", (language == Language.ENGLISH ? "English" : "Français")), true);
-        MessageEmbed lang = EmbedMaker.make(Color.GREEN, I18NManager.getValue(cerebrumUser.getUserLanguage(), "langSelectionSuccessTitle"), null, selectLanguage);
+        MessageEmbed.Field selectLanguage = new MessageEmbed.Field(I18NManager.getValue(cerebrumUser.getUserLanguage(), "langSelectionSuccessDesc"), language == Language.ENGLISH ? "English" : "Français", true);
+        MessageEmbed lang = EmbedMaker.make(Color.GREEN, I18NManager.getValue(cerebrumUser.getUserLanguage(), "opSuccess"), null, selectLanguage);
         channel.sendMessage(lang).queue();
 
         cerebrumUser.setLanguage(language.ordinal());

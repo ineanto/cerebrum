@@ -19,7 +19,7 @@ public class ReactionListener<T>
     private final Map<String, Consumer<Message>> reactions;
     private final long userId;
     private volatile T data;
-    private Long expiresIn, lastAction;
+    private long expiresIn, lastAction;
     private boolean active;
 
     public ReactionListener(long userId, T data)
@@ -29,7 +29,7 @@ public class ReactionListener<T>
         reactions = new LinkedHashMap<>();
         active = true;
         lastAction = System.currentTimeMillis();
-        expiresIn = TimeUnit.MINUTES.toMillis(5);
+        expiresIn = TimeUnit.MINUTES.toMillis(1);
     }
 
     public boolean isActive()

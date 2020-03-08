@@ -58,6 +58,11 @@ public class Cerebrum
     public static final String PREFIX = "?";
 
     /**
+     * {@code Cerebrum}'s owner's ID.
+     */
+    public static final String OWNER = "281511510176563201";
+
+    /**
      * Determines if {@code Cerebrum} is in debug mode. <p>
      * Enabling debug will provide additional information <p>
      * about {@code Cerebrum}'s work, requests, activities and much more.

@@ -72,6 +72,7 @@ public class ReactionManager
     public void handle(MessageChannel channel, long messageId, long userId, MessageReaction reaction)
     {
         ReactionListener<?> listener = reactions.get(Cerebrum.GUILD.getIdLong()).get(messageId);
+        if (listener == null) { return; }
         if (!listener.isActive() || listener.getExpiresInTimestamp() < System.currentTimeMillis())
         {
             reactions.remove(Cerebrum.GUILD.getIdLong()).remove(messageId);

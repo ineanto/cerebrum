@@ -31,7 +31,7 @@ public class OrderManager
     /**
      * Represents the default {@link Order}.
      */
-    public static final Order DEFAULT_ORDER = new Order(null, OrderType.OTHER, "N/A", -1, System.currentTimeMillis(), System.currentTimeMillis());
+    public static final Order DEFAULT_ORDER = new Order(I18NManager.getValue("orderNullValue"), OrderType.OTHER, I18NManager.getValue("orderNullValue"), -1, -1, -1);
 
     /**
      * The {@link JDA} instance.
@@ -100,11 +100,7 @@ public class OrderManager
 
         if (Cerebrum.DEBUG) { LOGGER.debug(order.toString()); }
 
-        while(order.getNextStep() != OrderStep.DONE)
-        {
-            order.processStep(channel, cerebrumUser);
-        }
-
+        order.processStep(channel, cerebrumUser);
         channel.close().complete();
     }
 

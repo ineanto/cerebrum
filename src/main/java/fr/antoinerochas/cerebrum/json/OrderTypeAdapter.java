@@ -3,8 +3,9 @@ package fr.antoinerochas.cerebrum.json;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import fr.antoinerochas.cerebrum.i18n.I18NManager;
 import fr.antoinerochas.cerebrum.order.Order;
+import fr.antoinerochas.cerebrum.order.OrderManager;
+import fr.antoinerochas.cerebrum.order.OrderType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,8 +30,10 @@ public class OrderTypeAdapter extends TypeAdapter<Order>
     {
         out.beginArray();
         out.name("customer").value(value.getCustomerId());
+        out.name("type").value(value.getType().ordinal());
         out.name("description").value(value.getDescription());
-        out.name("ordered").value(value.getDate());
+        out.name("price").value(value.getPrice());
+        out.name("ordered").value(value.getOrdered());
         out.name("deadline").value(value.getDeadline());
         out.endArray();
     }
@@ -38,19 +41,24 @@ public class OrderTypeAdapter extends TypeAdapter<Order>
     @Override
     public Order read(JsonReader in) throws IOException
     {
-        String customer = I18NManager.getValue("orderNullValue"), description = I18NManager.getValue("orderNullValue");
-        long ordered = -1, deadline = -1;
+        Order defaultOrder = OrderManager.DEFAULT_ORDER;
+        String customer = defaultOrder.getCustomerId(), description = defaultOrder.getDescription();
+        OrderType type = defaultOrder.getType();
+        int price = defaultOrder.getPrice();
+        long ordered = defaultOrder.getOrdered(), deadline = defaultOrder.getDeadline();
 
         in.beginArray();
         while (in.hasNext())
         {
             customer = in.nextString();
+            type = OrderType.values()[in.nextInt()];
             description = in.nextString();
+            price = in.nextInt();
             ordered = in.nextLong();
             deadline = in.nextLong();
         }
         in.endArray();
 
-        return new Order(customer, description, ordered, deadline);
+        return new Order(customer, type, description, price, ordered, deadline);
     }
 }

@@ -1,12 +1,17 @@
 {
   "appEnabled": "{0} has been started.",
   "appShutdown": "{0} is shutting down.",
+  "opSuccess": "Success!",
   "orderUnavailable": "We're sorry, but you can't order now.",
   "orderNullValue": "N/A",
+  "orderTypeSetTitle": "Order type:",
+  "orderTypeSetDesc": "Please chose below.",
+  "orderTypeSetMsg": "I can make various types of orders:\n\uD83D\uDD0A: Discord\n\uD83C\uDFAE: Minecraft plugin\n\uD83D\uDDA5️: Standalone App\n\u2753: Other (precise in descrition)\nChoose by reacting!",
+  "orderTypeUpdatedDesc": "Order's type updated:",
+  "orderTypeUpdatedMsg": "{0}.",
   "langSelectionTitle": "Language selection",
   "langSelectionDesc": "It's you time to choose!",
   "langSelectionEmbed": "Please select a language by reacting with the corresponding flag. You have 30 seconds.",
-  "langSelectionSuccessTitle": "Success!",
   "langSelectionSuccessDesc": "Language updated to:",
   "langUpdateSuccess": "{0}."
 }

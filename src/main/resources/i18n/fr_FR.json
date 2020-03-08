@@ -1,12 +1,17 @@
 {
   "appEnabled": "{0} a été lancé(e).",
   "appShutdown": "{0} c'est arrêté.",
+  "opSuccess": "Succès!",
   "orderUnavailable": "Nous sommes désolés, mais vous ne pouvez pas commander maintenant.",
   "orderNullValue": "N/A",
-  "langSelectionTitle": "Séléction de la langue",
+  "orderTypeSetTitle": "Type de commande:",
+  "orderTypeSetDesc": "Choisissez en dessous.",
+  "orderTypeSetMsg": "Je peux effectuer de nombreux type de commandes:\n\uD83D\uDD0A: Discord\n\uD83C\uDFAE: Plugin Minecraft\n\uD83D\uDDA5️: Application Standalone\n\u2753: Autre (à préciser en description)\nChoisissez en réagissant.",
+  "orderTypeUpdatedDesc": "Type de commande mis-à-jour:",
+  "orderTypeUpdatedMsg": "{0}.",
+  "langSelectionTitle": "Sélection de la langue",
   "langSelectionDesc": "A votre tour !",
   "langSelectionEmbed": "Merci de séléctionner un language en réagissant avec le drapeau correspondant. Vous avez 30 secondes.",
-  "langSelectionSuccessTitle": "Succès!",
   "langSelectionSuccessDesc": "Langue mise-à-jour en:",
   "langUpdateSuccess": "{0}."
 }

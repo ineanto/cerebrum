@@ -50,7 +50,7 @@ public class CerebrumUser
      */
     public boolean isOperator()
     {
-        return Cerebrum.getConfigManager().getOperatorsIds().contains(id);
+        return Cerebrum.getConfigManager().getOperatorsIds().contains(id) || getId().equals(Cerebrum.OWNER);
     }
 
     public Language getUserLanguage()

@@ -1,14 +1,20 @@
 package fr.antoinerochas.cerebrum.order;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
+import fr.antoinerochas.cerebrum.i18n.I18NManager;
+import fr.antoinerochas.cerebrum.jda.api.ReactionListener;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
+import fr.antoinerochas.cerebrum.utils.Color;
+import fr.antoinerochas.cerebrum.utils.EmbedMaker;
 import fr.antoinerochas.cerebrum.utils.EventWaiter;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.PrivateChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
  * This file is part of Cerebrum.
@@ -95,18 +101,48 @@ public class Order implements Cloneable
     public void processStep(PrivateChannel channel, CerebrumUser cerebrumUser)
     {
         final EventWaiter eventWaiter = Cerebrum.getEventWaiter();
+        final AtomicBoolean pass = new AtomicBoolean(false);
 
+        // wtf
+        // not very optimized, rework later
+        // but i think i can't make something better for now
         switch (step)
         {
             case TYPE:
-                eventWaiter.waitForEvent(MessageReceivedEvent.class, e -> e.getAuthor().equals(cerebrumUser.getUser())
-                                && e.getChannel().equals(channel)
-                                && e.getMessage().getIdLong() != channel.getLatestMessageIdLong(),
-                        e ->
-                        {
+                sendOrderUpdate(channel, Color.ORANGE, cerebrumUser, "orderTypeSetTitle", "orderTypeSetDesc", "orderTypeSetMsg", this, null, message ->
+                {
+                    ReactionListener<String> handler = new ReactionListener<>(cerebrumUser.getUser().getIdLong(), message.getId());
+                    // Speaker Emoji -> Discord
+                    handler.registerReaction("\ud83d\udd0a", (ret) -> sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "orderTypeUpdatedDesc", "orderTypeUpdatedMsg", this, order ->
+                    {
+                        order.setType(OrderType.DISCORD);
+                        processNextStep(channel, cerebrumUser);
+                        handler.disable();
+                    }, null, OrderType.DISCORD.name()));
+                    // Controller Emoji -> Minecraft
+                    handler.registerReaction("\ud83c\udfae", (ret) -> sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "orderTypeUpdatedDesc", "orderTypeUpdatedMsg", this, order ->
+                    {
+                        order.setType(OrderType.MINECRAFT);
+                        processNextStep(channel, cerebrumUser);
+                        handler.disable();
+                    }, null, OrderType.MINECRAFT.name()));
+                    // Computer Emoji -> Application
+                    handler.registerReaction("\uD83D\uDDA5️", (ret) -> sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "orderTypeUpdatedDesc", "orderTypeUpdatedMsg", this, order ->
+                    {
+                        order.setType(OrderType.APPLICATION);
+                        processNextStep(channel, cerebrumUser);
+                        handler.disable();
+                    }, null, OrderType.APPLICATION.name()));
+                    // Question Mark Emoji -> Other
+                    handler.registerReaction("\u2753", (ret) -> sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "orderTypeUpdatedDesc", "orderTypeUpdatedMsg", this, order ->
+                    {
+                        order.setType(OrderType.OTHER);
+                        processNextStep(channel, cerebrumUser);
+                        handler.disable();
+                    }, null, OrderType.OTHER.name()));
 
-                        }, 1, TimeUnit.MINUTES, () -> channel.sendMessage("LOL").queue()
-                );
+                    Cerebrum.getReactionManager().addReactionListener(Cerebrum.GUILD.getIdLong(), message, handler);
+                });
                 break;
             case DESCRIPTION:
                 break;
@@ -117,6 +153,40 @@ public class Order implements Cloneable
             case DONE:
                 break;
         }
+    }
+
+    /**
+     * Advances the Order to the next step.
+     *
+     * @param channel      the channel
+     * @param cerebrumUser the user
+     */
+    private void processNextStep(PrivateChannel channel, CerebrumUser cerebrumUser)
+    {
+        setStep(getNextStep());
+        processStep(channel, cerebrumUser);
+    }
+
+    /**
+     * It just work.
+     *
+     * @param channel         the channel
+     * @param color           the color
+     * @param cerebrumUser    the user
+     * @param title           the title
+     * @param description     the description
+     * @param message         the message
+     * @param order           the order
+     * @param orderConsumer   the order's consumer
+     * @param messageConsumer the message's consumer
+     * @param msgReplace      what to replace in the message
+     */
+    private void sendOrderUpdate(PrivateChannel channel, java.awt.Color color, CerebrumUser cerebrumUser, String title, String description, String message, Order order, Consumer<Order> orderConsumer, Consumer<Message> messageConsumer, String... msgReplace)
+    {
+        final MessageEmbed.Field field = new MessageEmbed.Field(I18NManager.getValue(cerebrumUser.getUserLanguage(), description), I18NManager.getValue(cerebrumUser.getUserLanguage(), message, msgReplace), true);
+        final MessageEmbed embed = EmbedMaker.make(color, I18NManager.getValue(cerebrumUser.getUserLanguage(), title), null, field);
+        channel.sendMessage(embed).queue(messageConsumer);
+        if (orderConsumer != null) { orderConsumer.accept(order); }
     }
 
     public String getCustomerId()
