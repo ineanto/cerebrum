@@ -2,5 +2,11 @@
   "appEnabled": "{0} a été lancé(e).",
   "appShutdown": "{0} c'est arrêté.",
   "orderUnavailable": "Nous sommes désolés, mais vous ne pouvez pas commander maintenant.",
-  "orderNullValue": "N/A"
+  "orderNullValue": "N/A",
+  "langSelectionTitle": "Séléction de la langue",
+  "langSelectionDesc": "A votre tour !",
+  "langSelectionEmbed": "Merci de séléctionner un language en réagissant avec le drapeau correspondant. Vous avez 30 secondes.",
+  "langSelectionSuccessTitle": "Succès!",
+  "langSelectionSuccessDesc": "Langue mise-à-jour en:",
+  "langUpdateSuccess": "{0}."
 }

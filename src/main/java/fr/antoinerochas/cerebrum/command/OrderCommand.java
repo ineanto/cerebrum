@@ -1,8 +1,8 @@
 package fr.antoinerochas.cerebrum.command;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
-import fr.antoinerochas.cerebrum.api.Command;
-import fr.antoinerochas.cerebrum.api.CommandExecutor;
+import fr.antoinerochas.cerebrum.command.api.Command;
+import fr.antoinerochas.cerebrum.command.api.CommandExecutor;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import net.dv8tion.jda.api.entities.User;
 

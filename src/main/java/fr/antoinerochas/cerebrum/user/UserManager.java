@@ -75,34 +75,22 @@ public class UserManager
     }
 
     /**
-     * Loads {@link User}'s data.
-     *
-     * @param user the user that we have to load data from
+     * Save all {@link CerebrumUser}s.
      */
-    private void loadUser(User user)
+    public void saveAll()
     {
-        if (checkUserDataFolder())
+        LOGGER.info("Saving users...");
+        // How much users we have saved.
+        int saved = 0;
+        for (CerebrumUser value : users.values())
         {
-            // Get user's file.
-            final File userFile = getUserFile(user);
-
-            boolean validUserData = createUserData(user);
-
-            if (validUserData)
-            {
-                try
-                {
-                    CerebrumUser cerebrumUser = GsonManager.loadFile(new BufferedReader(new FileReader(userFile)), CerebrumUser.class);
-                    users.put(cerebrumUser.getId(), cerebrumUser);
-                    LOGGER.info("Successfully loaded user " + user.getId());
-                }
-                catch (FileNotFoundException e)
-                {
-                    LOGGER.error("Failed to load user " + user.getId() + "!", e);
-                    System.exit(-1);
-                }
-            }
+            // Save the user.
+            saved++;
+            saveUser(value.getUser());
         }
+        // Clear the cache.
+        users.clear();
+        LOGGER.info("Saved " + saved + " users.");
     }
 
     /**
@@ -110,7 +98,7 @@ public class UserManager
      *
      * @param user the user that we have to create data
      */
-    public boolean createUserData(User user)
+    private boolean createUserData(User user)
     {
         if (checkUserDataFolder())
         {
@@ -149,6 +137,64 @@ public class UserManager
     }
 
     /**
+     * Loads {@link User}'s data.
+     *
+     * @param user the user that we have to load data from
+     */
+    private void loadUser(User user)
+    {
+        if (checkUserDataFolder())
+        {
+            // Get user's file.
+            final File userFile = getUserFile(user);
+            final boolean validUserData = createUserData(user);
+            if (validUserData)
+            {
+                try
+                {
+                    CerebrumUser cerebrumUser = GsonManager.loadFile(new BufferedReader(new FileReader(userFile)), CerebrumUser.class);
+                    users.put(cerebrumUser.getId(), cerebrumUser);
+                    LOGGER.info("Successfully loaded user " + user.getId());
+                }
+                catch (FileNotFoundException e)
+                {
+                    LOGGER.error("Failed to load user " + user.getId() + "!", e);
+                    System.exit(-1);
+                }
+            }
+        }
+    }
+
+    /**
+     * Saves {@link User}'s data.
+     *
+     * @param user the user that we have to save data
+     */
+    private void saveUser(User user)
+    {
+        if (checkUserDataFolder())
+        {
+            // Get user's file.
+            final File userFile = getUserFile(user);
+            final boolean validUserData = getUser(user) != null;
+            if (validUserData)
+            {
+                // Instantiate CerebrumUser and turn it to JSON.
+                final CerebrumUser cerebrumUser = getUser(user);
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile)))
+                {
+                    writer.write(GsonManager.GSON.toJson(cerebrumUser));
+                }
+                catch (IOException e)
+                {
+                    LOGGER.error("Failed to save data for user " + user.getId() + "!", e);
+                    System.exit(-1);
+                }
+            }
+        }
+    }
+
+    /**
      * Check if the User Data folder is present,
      * and creates it if not.
      *
@@ -174,5 +220,16 @@ public class UserManager
     private File getUserFile(User user)
     {
         return new File(userDirectory, user.getId() + ".json");
+    }
+
+    /**
+     * Refreshes user's data.
+     *
+     * @param cerebrumUser user to refresh
+     */
+    public void refreshUser(CerebrumUser cerebrumUser)
+    {
+        users.remove(cerebrumUser.getId());
+        users.put(cerebrumUser.getId(), cerebrumUser);
     }
 }

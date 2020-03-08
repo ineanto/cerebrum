@@ -1,9 +1,14 @@
 package fr.antoinerochas.cerebrum;
 
-import fr.antoinerochas.cerebrum.api.CommandManager;
+import fr.antoinerochas.cerebrum.command.LanguageCommand;
+import fr.antoinerochas.cerebrum.command.api.CommandManager;
 import fr.antoinerochas.cerebrum.command.OrderCommand;
 import fr.antoinerochas.cerebrum.config.ConfigManager;
+import fr.antoinerochas.cerebrum.console.CLIManager;
+import fr.antoinerochas.cerebrum.console.CLIReload;
+import fr.antoinerochas.cerebrum.console.CLIStop;
 import fr.antoinerochas.cerebrum.jda.JDAManager;
+import fr.antoinerochas.cerebrum.jda.api.ReactionManager;
 import fr.antoinerochas.cerebrum.order.OrderManager;
 import fr.antoinerochas.cerebrum.user.UserManager;
 import net.dv8tion.jda.api.JDA;
@@ -64,7 +69,7 @@ public class Cerebrum
     public static boolean RUNNING = false;
 
     /**
-     * The {@link Guild} the server's running on.
+     * The {@link Guild} the bot's linked to.
      */
     public static Guild GUILD;
 
@@ -99,6 +104,16 @@ public class Cerebrum
      * The {@link CommandManager} instance.
      */
     private static CommandManager commandManager;
+
+    /**
+     * The {@link CLIManager} instance.
+     */
+    private static CLIManager cliManager;
+
+    /**
+     * The {@link ReactionManager} instance.
+     */
+    private static ReactionManager reactionManager;
 
     /**
      * Java's application entry point.
@@ -165,10 +180,17 @@ public class Cerebrum
             userManager = new UserManager(jda);
             // Set and load OrderManager instance.
             orderManager = new OrderManager(jda);
-            // Set and load OrderManager instance.
+            // Set and load CommandManager instance.
             commandManager = new CommandManager();
+            // Set and load CLIManager instance.
+            cliManager = new CLIManager();
+            // Set and load ReactionManager instance.
+            reactionManager = new ReactionManager();
 
             commandManager.register(new OrderCommand());
+            commandManager.register(new LanguageCommand());
+            cliManager.registerCommand("stop", new CLIStop());
+            cliManager.registerCommand("reload", new CLIReload());
 
             // When everything finished loading
             // add a shutdown hook and let live.
@@ -185,7 +207,7 @@ public class Cerebrum
                 // ...scan user's input for "stop".
                 Scanner scanner = new Scanner(System.in);
                 String input = scanner.nextLine();
-                if (input.equals("stop")) { System.exit(0); }
+                cliManager.fetchAndExecute(input);
             }
         }
         catch (LoginException | InterruptedException ex)
@@ -198,6 +220,17 @@ public class Cerebrum
     }
 
     /**
+     * Reloads {@code Cerebrum}, it's configuration and database.
+     */
+    public static void reload() throws IOException
+    {
+        LOGGER.info("Reloading Cerebrum...");
+        configManager.loadConfiguration();
+        userManager.saveAll();
+        LOGGER.info("Done, please consider rebooting if you encounter any issues.");
+    }
+
+    /**
      * Gracefully exits {@code Cerebrum}.
      */
     private static void exit()
@@ -205,7 +238,9 @@ public class Cerebrum
         RUNNING = false;
         // Logging and then stop.
         LOGGER.info("Stopping Cerebrum...");
+        userManager.saveAll();
         jda.shutdown();
+        LOGGER.info("bye!");
     }
 
     /**
@@ -254,4 +289,21 @@ public class Cerebrum
      * @return {@link CommandManager}'s instance
      */
     public static CommandManager getCommandManager() { return commandManager; }
+
+    /**
+     * Get {@link CLIManager}'s instance.
+     *
+     * @return {@link CLIManager}'s instance
+     */
+    public static CLIManager getCLIManager() { return cliManager; }
+
+    /**
+     * Get {@link ReactionManager}'s instance.
+     *
+     * @return {@link ReactionManager}'s instance
+     */
+    public static ReactionManager getReactionManager()
+    {
+        return reactionManager;
+    }
 }

@@ -35,7 +35,7 @@ public class I18NManager
      * @param key the value's key
      * @return the {@link String} value linked to the key
      */
-    public static String getValue(Language language, String key)
+    public static String getValue(Language language, String key, String... replace)
     {
         LOGGER.debug("Getting key (lang=" + language.getCode() + ",key=" + key + ")...");
         // Instantiate an HashMap type.
@@ -48,7 +48,7 @@ public class I18NManager
             final HashMap<String, String> map = GsonManager.loadFile(reader, hashMapType);
 
             // Get the value from the Map according to the key.
-            final String value = map.get(key);
+            String value = map.get(key);
 
             // Some log.
             LOGGER.debug("Successfully read \"" + key + "\" from Lang File.");
@@ -60,7 +60,14 @@ public class I18NManager
                 return key;
             }
 
-            // Else, return the value.
+            if(replace.length != 0)
+            {
+                for (int i = 0; i < replace.length; i++)
+                {
+                    value = value.replace("{" + i + "}", replace[i]);
+                }
+            }
+
             return value;
         }
         catch (IOException ex)

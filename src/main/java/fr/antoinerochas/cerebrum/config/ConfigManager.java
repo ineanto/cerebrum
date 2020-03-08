@@ -38,9 +38,13 @@ public class ConfigManager
      */
     public void loadConfiguration() throws IOException
     {
+        // Getting the file.
         File file = new File("./config.json");
         InputStream resource = ClassLoader.getSystemResourceAsStream("config.json");
 
+        LOGGER.info("Loading configuration...");
+
+        // If it does not exists, create it.
         if (!file.exists())
         {
             Files.copy(resource, file.toPath());
@@ -48,6 +52,7 @@ public class ConfigManager
             System.exit(0);
         }
 
+        LOGGER.info("Configuration loaded.");
         configuration = file;
     }
 

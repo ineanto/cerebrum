@@ -3,7 +3,10 @@ package fr.antoinerochas.cerebrum.order;
 import fr.antoinerochas.cerebrum.Cerebrum;
 import fr.antoinerochas.cerebrum.i18n.I18NManager;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
+import fr.antoinerochas.cerebrum.utils.Color;
+import fr.antoinerochas.cerebrum.utils.EmbedMaker;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.logging.log4j.LogManager;
@@ -64,17 +67,18 @@ public class OrderManager
         // If orders are disabled, tell the user.
         if (status != OrderStatus.AVAILABLE)
         {
-            if (cerebrumUser.isOperator())
+            if (!cerebrumUser.isOperator())
             {
-                LOGGER.debug("User " + user.getId() + " is OP, letting user take order from FDB");
-                channel.sendMessage(I18NManager.getValue(cerebrumUser.getUserLanguage(), "orderUnavailable")).complete();
+                MessageEmbed.Field orderUnavailable = new MessageEmbed.Field("Your order can't be processed.", I18NManager.getValue(cerebrumUser.getUserLanguage(), "orderUnavailable"), true);
+                MessageEmbed error = EmbedMaker.make(Color.RED, "Sorry " + user.getName() + "...", null, orderUnavailable);
+                channel.sendMessage(error).complete();
                 channel.close().complete();
                 return;
             }
-
-            channel.sendMessage(I18NManager.getValue(cerebrumUser.getUserLanguage(), "orderUnavailable")).complete();
-            channel.close().complete();
-            return;
+            else
+            {
+                LOGGER.debug("User " + user.getId() + " has bypassed OMS.");
+            }
         }
 
         LOGGER.info("Taking order from " + user.getName() + "(" + user.getId() + ")...");
@@ -91,5 +95,15 @@ public class OrderManager
         this.status = status;
         // Print the status change.
         LOGGER.info("OrderManager Status has been switched to " + status.name() + ". Applying changes...");
+    }
+
+    /**
+     * Get the current {@link OrderManager}'s status.
+     *
+     * @return the current {@link OrderManager}'s {@link OrderStatus}
+     */
+    public OrderStatus getStatus()
+    {
+        return status;
     }
 }

@@ -1,4 +1,4 @@
-package fr.antoinerochas.cerebrum.api;
+package fr.antoinerochas.cerebrum.command.api;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
 import net.dv8tion.jda.api.JDA;
@@ -166,7 +166,7 @@ public class CommandManager
             }
         }
 
-        LOGGER.info("{} executed command {}", message.getAuthor().getName(), message.getContentRaw());
+        LOGGER.info("{} issued command: \"{}\"", message.getAuthor().getName(), message.getContentRaw());
 
         String[] args = Arrays.copyOfRange(split, 1, split.length);
 

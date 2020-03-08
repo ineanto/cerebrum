@@ -66,6 +66,7 @@ public class CerebrumUser
     public void setLanguage(int language)
     {
         this.language = language;
+        refresh();
     }
 
     public long getLastOrdered()
@@ -76,6 +77,7 @@ public class CerebrumUser
     public void setLastOrdered(long lastOrdered)
     {
         this.lastOrdered = lastOrdered;
+        refresh();
     }
 
     public ArrayList<Order> getOrders()
@@ -86,6 +88,7 @@ public class CerebrumUser
     public void setOrders(ArrayList<Order> orders)
     {
         this.orders = orders;
+        refresh();
     }
 
     public String getId()
@@ -96,6 +99,13 @@ public class CerebrumUser
     public void setId(String id)
     {
         this.id = id;
+    }
+
+    public User getUser() { return Cerebrum.getJDA().getUserById(id); }
+
+    private void refresh()
+    {
+        Cerebrum.getUserManager().refreshUser(this);
     }
 
     @Override

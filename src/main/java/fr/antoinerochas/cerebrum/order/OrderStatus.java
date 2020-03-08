@@ -15,6 +15,7 @@ public enum OrderStatus
      * and send/store them in the official production database.
      */
     AVAILABLE,
+
     /**
      * If a maintenance is ongoing, or if there's too many orders,
      * we can temporally disable order taking with this status.
@@ -22,12 +23,14 @@ public enum OrderStatus
      * from now on.
      */
     TEMPORALLY_UNAVAILABLE,
+
     /**
-     * Disable order taking completely.
+     * Disable orders completely.
      */
     OFF,
+
     /**
-     * In Debug status, Cerebrum will not use the official DB.
+     * Debug status, Cerebrum will not use a Production DB.
      */
     DEBUG
 }
