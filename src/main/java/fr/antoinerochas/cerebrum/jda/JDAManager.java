@@ -2,6 +2,7 @@ package fr.antoinerochas.cerebrum.jda;
 
 import fr.antoinerochas.cerebrum.event.MessageListener;
 import fr.antoinerochas.cerebrum.event.ReactionListener;
+import fr.antoinerochas.cerebrum.utils.EventWaiter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -39,6 +40,21 @@ public class JDAManager
     private final String envar = "DISCORD_SECRET";
 
     /**
+     * The {@link EventWaiter} instance.
+     */
+    private EventWaiter eventWaiter;
+
+    /**
+     * Constructor.
+     *
+     * @param eventWaiter the {@link EventWaiter} instance
+     */
+    public JDAManager(EventWaiter eventWaiter)
+    {
+        this.eventWaiter = eventWaiter;
+    }
+
+    /**
      * Log-in the Discord bot account using the secret {@link #envar}.
      *
      * @return a connected instance of {@link JDA}
@@ -64,7 +80,7 @@ public class JDAManager
         LOGGER.info("Building Bot...");
 
         // Modify some attributes.
-        builder.addEventListeners(new MessageListener(), new ReactionListener());
+        builder.addEventListeners(new MessageListener(), eventWaiter, new ReactionListener());
         builder.setDisabledCacheFlags(EnumSet.of(CacheFlag.VOICE_STATE)); // Don't cache user's voice state.
         builder.setActivity(Activity.watching("you !")); // Modify bot's activity.
         builder.setStatus(OnlineStatus.ONLINE); // Set his status to Online.

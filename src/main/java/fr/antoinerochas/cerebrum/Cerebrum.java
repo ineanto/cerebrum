@@ -11,6 +11,7 @@ import fr.antoinerochas.cerebrum.jda.JDAManager;
 import fr.antoinerochas.cerebrum.jda.api.ReactionManager;
 import fr.antoinerochas.cerebrum.order.OrderManager;
 import fr.antoinerochas.cerebrum.user.UserManager;
+import fr.antoinerochas.cerebrum.utils.EventWaiter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import org.apache.logging.log4j.Level;
@@ -116,6 +117,12 @@ public class Cerebrum
     private static ReactionManager reactionManager;
 
     /**
+     * The {@link EventWaiter} instance.
+     */
+    private static EventWaiter eventWaiter;
+
+
+    /**
      * Java's application entry point.
      *
      * @param args arguments
@@ -138,7 +145,7 @@ public class Cerebrum
         LOGGER.info("Loading " + APP + "...");
 
         // Instantiate JDAManager.
-        JDAManager jdaManager = new JDAManager();
+        JDAManager jdaManager = new JDAManager(eventWaiter = new EventWaiter());
         // Instantiate ConfigManager.
         configManager = new ConfigManager();
         configManager.loadConfiguration();
@@ -305,5 +312,15 @@ public class Cerebrum
     public static ReactionManager getReactionManager()
     {
         return reactionManager;
+    }
+
+    /**
+     * Get {@link EventWaiter}'s instance.
+     *
+     * @return {@link EventWaiter}'s instance
+     */
+    public static EventWaiter getEventWaiter()
+    {
+        return eventWaiter;
     }
 }

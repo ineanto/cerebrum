@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.entities.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
+
 /**
  * This file is part of Cerebrum.
  * Is responsible for taking orders from customers.
@@ -27,9 +29,19 @@ public class OrderManager
     public static final Logger LOGGER = LogManager.getLogger(OrderManager.class);
 
     /**
+     * Represents the default {@link Order}.
+     */
+    public static final Order DEFAULT_ORDER = new Order(null, OrderType.OTHER, "N/A", -1, System.currentTimeMillis(), System.currentTimeMillis());
+
+    /**
      * The {@link JDA} instance.
      */
     private JDA jda;
+
+    /**
+     * Represents all the ongoing orders.
+     */
+    private HashMap<String, Order> ongoingOrders = new HashMap<>();
 
     /**
      * The current {@link OrderManager}'s status.
@@ -82,6 +94,17 @@ public class OrderManager
         }
 
         LOGGER.info("Taking order from " + user.getName() + "(" + user.getId() + ")...");
+
+        final Order order = DEFAULT_ORDER.clone();
+        order.setCustomerId(user.getId());
+
+        if (Cerebrum.DEBUG) { LOGGER.debug(order.toString()); }
+
+        while(order.getNextStep() != OrderStep.DONE)
+        {
+            order.processStep(channel, cerebrumUser);
+        }
+
         channel.close().complete();
     }
 
