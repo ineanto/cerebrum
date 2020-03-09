@@ -208,8 +208,8 @@ public class EventWaiter implements EventListener
         Checks.notNull(condition, "The provided condition predicate");
         Checks.notNull(action, "The provided action consumer");
 
-        WaitingEvent we = new WaitingEvent<>(condition, action);
-        Set<WaitingEvent> set = waitingEvents.computeIfAbsent(classType, c -> new HashSet<>());
+        final WaitingEvent we = new WaitingEvent<>(condition, action);
+        final Set<WaitingEvent> set = waitingEvents.computeIfAbsent(classType, c -> new HashSet<>());
         set.add(we);
 
         if(timeout > 0 && unit != null)

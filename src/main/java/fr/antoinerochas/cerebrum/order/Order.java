@@ -7,13 +7,17 @@ import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import fr.antoinerochas.cerebrum.utils.Color;
 import fr.antoinerochas.cerebrum.utils.EmbedMaker;
 import fr.antoinerochas.cerebrum.utils.EventWaiter;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 /**
@@ -105,7 +109,7 @@ public class Order implements Cloneable
 
         // wtf
         // not very optimized, rework later
-        // but i think i can't make something better for now
+        // but i don't think i can make something better for now
         switch (step)
         {
             case TYPE:
@@ -127,6 +131,7 @@ public class Order implements Cloneable
                         handler.disable();
                     }, null, OrderType.MINECRAFT.name()));
                     // Computer Emoji -> Application
+                    // TODO: 09/03/2020 Apparently clicking on this emoji does nothing and crash the order process ?
                     handler.registerReaction("\uD83D\uDDA5️", (ret) -> sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "orderTypeUpdatedDesc", "orderTypeUpdatedMsg", this, order ->
                     {
                         order.setType(OrderType.APPLICATION);
@@ -145,12 +150,63 @@ public class Order implements Cloneable
                 });
                 break;
             case DESCRIPTION:
+                sendOrderUpdate(channel, Color.ORANGE, cerebrumUser, "orderDescSetTitle", "orderDescSetDesc", "orderDescSetMsg", this, null, null);
+                eventWaiter.waitForEvent(MessageReceivedEvent.class,
+                        event ->
+                                event.getMessage().getIdLong() != channel.getLatestMessageIdLong() &&
+                                        !event.getAuthor().isBot() &&
+                                        event.isFromType(ChannelType.PRIVATE) &&
+                                        !event.isFromGuild(),
+                        event ->
+                        {
+                            final String description = event.getMessage().getContentRaw();
+                            sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "orderMadeProgress", "orderDescUpdatedMsg", this, order ->
+                                    order.setDescription(description), null);
+                            processNextStep(channel, cerebrumUser);
+                        }, 5, TimeUnit.MINUTES, () ->
+                                // TODO: 09/03/2020 Cancel order
+                                sendOrderUpdate(channel, Color.RED, cerebrumUser, "FAIL", null, null, this, order ->
+                                        order.setDescription(description), null));
                 break;
             case PRICE:
+                final ReentrantLock lock = new ReentrantLock();
+                sendOrderUpdate(channel, Color.ORANGE, cerebrumUser, "orderPriceSetTitle", "orderPriceSetDesc", "orderPriceSetMsg", this,
+                        null, null);
+                do
+                {
+                    eventWaiter.waitForEvent(MessageReceivedEvent.class,
+                            event ->
+                                    event.getMessage().getIdLong() != channel.getLatestMessageIdLong() &&
+                                            !event.getAuthor().isBot() &&
+                                            event.isFromType(ChannelType.PRIVATE) &&
+                                            !event.isFromGuild(),
+                            event ->
+                            {
+                                try
+                                {
+                                    final String content = event.getMessage().getContentRaw();
+                                    int price = Integer.parseInt(content);
+                                    sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "orderMadeProgress", "orderPriceUpdatedMsg", this, order ->
+                                            order.setPrice(price), null);
+                                    lock.unlock();
+                                }
+                                catch (NumberFormatException e)
+                                {
+                                    sendOrderUpdate(channel, Color.RED, cerebrumUser, "opFailed", "opFailedDesc", "orderPriceIncorrect", this,
+                                            null, null);
+                                }
+                            });
+                    lock.lock();
+                }
+                while (!lock.isLocked());
+                processNextStep(channel, cerebrumUser);
                 break;
             case DEADLINE:
                 break;
             case DONE:
+                /*sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "ORDERDONE", "ORDERDONE", this, order ->
+                {
+                }, null);*/
                 break;
         }
     }

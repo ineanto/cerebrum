@@ -97,9 +97,6 @@ public class OrderManager
 
         final Order order = DEFAULT_ORDER.clone();
         order.setCustomerId(user.getId());
-
-        if (Cerebrum.DEBUG) { LOGGER.debug(order.toString()); }
-
         order.processStep(channel, cerebrumUser);
         channel.close().complete();
     }

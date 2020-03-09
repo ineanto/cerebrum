@@ -37,6 +37,8 @@ public class I18NManager
      */
     public static String getValue(Language language, String key, String... replace)
     {
+        if(language == null) { return null; }
+        if(key == null) { return null; }
         LOGGER.debug("Getting key (lang=" + language.getCode() + ",key=" + key + ")...");
         // Instantiate an HashMap type.
         final Type hashMapType = new TypeToken<HashMap<String, String>>() {}.getType();
@@ -57,7 +59,7 @@ public class I18NManager
             if (value == null)
             {
                 LOGGER.error(key + " has not been found in " + language.getCode() + ".");
-                return key;
+                return language.getCode() + "-" + key;
             }
 
             if(replace.length != 0)
