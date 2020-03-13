@@ -9,8 +9,27 @@ package fr.antoinerochas.cerebrum.order;
  */
 public enum OrderType
 {
-    DISCORD,
-    MINECRAFT,
-    APPLICATION,
-    OTHER
+    DISCORD("Discord"),
+    MINECRAFT("Minecraft"),
+    APPLICATION("Application"),
+    OTHER("Other/Autre");
+
+    /**
+     * Type's "name"/description.
+     */
+    private final String name;
+
+    /**
+     * Constructor.
+     * @param name the type's name
+     */
+    OrderType(String name)
+    {
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
 }

@@ -37,9 +37,11 @@ public class I18NManager
      */
     public static String getValue(Language language, String key, String... replace)
     {
-        if(language == null) { return null; }
-        if(key == null) { return null; }
-        LOGGER.debug("Getting key (lang=" + language.getCode() + ",key=" + key + ")...");
+        if (language == null) { return null; }
+        if (key == null) { return null; }
+
+        LOGGER.debug("Getting key (lang=" + language.getCode() + ", key=" + key + ")...");
+
         // Instantiate an HashMap type.
         final Type hashMapType = new TypeToken<HashMap<String, String>>() {}.getType();
 
@@ -58,11 +60,11 @@ public class I18NManager
             // If the key is null, return the key and give an error in console.
             if (value == null)
             {
-                LOGGER.error(key + " has not been found in " + language.getCode() + ".");
+                LOGGER.error("\"" + key + "\" can't be found in " + language.getCode() + " (" + language.getCode() + "), skipping");
                 return language.getCode() + "-" + key;
             }
 
-            if(replace.length != 0)
+            if (replace != null && replace.length != 0)
             {
                 for (int i = 0; i < replace.length; i++)
                 {
@@ -76,8 +78,7 @@ public class I18NManager
         {
             // If we fail I/O notify the user and stop the application
             LOGGER.error("Failed to read: " + language.getFile().getName() + "(" + language.getCode() + ")!", ex);
-            System.exit(-1);
-            return null;
+            return language.getCode() + "-" + key;
         }
     }
 

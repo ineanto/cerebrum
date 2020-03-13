@@ -40,7 +40,7 @@ public class GsonManager
     public static <T> T loadFile(Reader reader, Type type)
     {
         // Get the object from the specified type as a T object.
-        LOGGER.debug("Mapping the JSON file to -> " + type.getTypeName());
+        LOGGER.debug("Mapping JSON to: " + type.getTypeName());
         // Return the mapped file as an Object.
         return GSON.fromJson(reader, type);
     }

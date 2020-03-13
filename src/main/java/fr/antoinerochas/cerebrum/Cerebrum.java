@@ -134,7 +134,7 @@ public class Cerebrum
      */
     public static void main(String[] args) throws IOException
     {
-        // Check for the Debug flag.
+        // Check for the debugging flag.
         if (args.length > 0 && args[0].equals(debugFlag))
         {
             DEBUG = true;
@@ -175,10 +175,10 @@ public class Cerebrum
             }
             LOGGER.info("Guild found (name=\"" + GUILD.getName() + "\", id=" + GUILD.getId() + ").");
 
-            // Getting channels from configuration.
+            // Getting channels from the configuration.
             if (configManager.getLogChannelId().isEmpty())
             {
-                LOGGER.warn("Log channel is not defined. Cerebrum will not log activity.");
+                LOGGER.warn("Log channel hasn't been defined. Cerebrum will not log activity.");
             }
 
             if (configManager.getOrderChannelId().isEmpty())
@@ -232,7 +232,7 @@ public class Cerebrum
     }
 
     /**
-     * Reloads {@code Cerebrum}, it's configuration and database.
+     * Reloads {@code Cerebrum}, the configuration and database.
      */
     public static void reload() throws IOException
     {

@@ -161,7 +161,7 @@ public class EventWaiter implements EventListener
      */
     public <T extends Event> void waitForEvent(Class<T> classType, Predicate<T> condition, Consumer<T> action)
     {
-        waitForEvent(classType, condition, action, -1, null, null);
+        waitForEvent(classType, condition, action, 5, TimeUnit.MINUTES, null);
     }
 
     /**
