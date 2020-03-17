@@ -1,18 +1,18 @@
 package fr.antoinerochas.cerebrum.order;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
+import fr.antoinerochas.cerebrum.i18n.I18N;
 import fr.antoinerochas.cerebrum.i18n.I18NManager;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import fr.antoinerochas.cerebrum.utils.Color;
-import fr.antoinerochas.cerebrum.utils.EmbedMaker;
+import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * This file is part of Cerebrum.
@@ -41,7 +41,7 @@ public class OrderManager
     /**
      * Represents all the ongoing orders.
      */
-    private HashMap<String, Order> ongoingOrders = new HashMap<>();
+    private ArrayList<String> ongoingOrders = new ArrayList<>();
 
     /**
      * The current {@link OrderManager}'s status.
@@ -75,29 +75,40 @@ public class OrderManager
 
         final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
         final PrivateChannel channel = user.openPrivateChannel().complete();
+        final String id = user.getId();
+
+        final ComplexEmbed errorEmbed = new ComplexEmbed(channel, cerebrumUser);
+        errorEmbed.setColor(Color.RED);
+        errorEmbed.setTitle(I18N.Global.ERROR);
+        errorEmbed.setDescription(I18N.Global.ERROR_DESC);
 
         // If orders are disabled, tell the user.
         if (status != OrderStatus.AVAILABLE)
         {
             if (!cerebrumUser.isOperator())
             {
-                MessageEmbed.Field orderUnavailable = new MessageEmbed.Field("Your order can't be processed.", I18NManager.getValue(cerebrumUser.getUserLanguage(), "orderUnavailable"), true);
-                MessageEmbed error = EmbedMaker.make(Color.RED, "Sorry " + user.getName() + "...", null, orderUnavailable);
-                channel.sendMessage(error).complete();
-                channel.close().complete();
+                errorEmbed.setMessage(I18N.Messages.Order.NOT_AVAILABLE);
+                errorEmbed.send();
                 return;
             }
-            else
-            {
-                LOGGER.debug("User " + user.getId() + " has bypassed OMS.");
-            }
+
+            LOGGER.debug("User " + id + " has bypassed OMS.");
         }
 
-        LOGGER.info("Taking order from " + user.getName() + "(" + user.getId() + ")...");
+        if(ongoingOrders.contains(id))
+        {
+            errorEmbed.setMessage(I18N.Messages.Order.ALREADY_ORDERING);
+            errorEmbed.send();
+            return;
+        }
 
+        LOGGER.info("Taking order from " + user.getName() + "(" + id + ")...");
+
+        // Clone the default order and modify some fields.
         final Order order = DEFAULT_ORDER.clone();
-        order.setCustomerId(user.getId());
-        order.processStep(channel, cerebrumUser);
+        order.setCustomerId(id);
+        order.process(channel, cerebrumUser);
+        ongoingOrders.add(id);
         channel.close().complete();
     }
 

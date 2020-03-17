@@ -1,14 +1,14 @@
 package fr.antoinerochas.cerebrum.command;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
-import fr.antoinerochas.cerebrum.command.api.Command;
-import fr.antoinerochas.cerebrum.command.api.CommandExecutor;
+import fr.antoinerochas.cerebrum.command.framework.Command;
+import fr.antoinerochas.cerebrum.command.framework.CommandExecutor;
 import fr.antoinerochas.cerebrum.i18n.I18NManager;
 import fr.antoinerochas.cerebrum.i18n.Language;
 import fr.antoinerochas.cerebrum.jda.api.ReactionListener;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import fr.antoinerochas.cerebrum.utils.Color;
-import fr.antoinerochas.cerebrum.utils.EmbedMaker;
+import fr.antoinerochas.cerebrum.embed.EmbedMaker;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.PrivateChannel;

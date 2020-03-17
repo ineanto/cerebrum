@@ -1,7 +1,7 @@
 package fr.antoinerochas.cerebrum;
 
 import fr.antoinerochas.cerebrum.command.LanguageCommand;
-import fr.antoinerochas.cerebrum.command.api.CommandManager;
+import fr.antoinerochas.cerebrum.command.framework.CommandManager;
 import fr.antoinerochas.cerebrum.command.OrderCommand;
 import fr.antoinerochas.cerebrum.config.ConfigManager;
 import fr.antoinerochas.cerebrum.console.CLIManager;

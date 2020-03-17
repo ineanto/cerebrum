@@ -1,4 +1,4 @@
-package fr.antoinerochas.cerebrum.utils;
+package fr.antoinerochas.cerebrum.embed;
 
 import fr.antoinerochas.cerebrum.i18n.I18NManager;
 import fr.antoinerochas.cerebrum.order.Order;
@@ -140,6 +140,11 @@ public class ComplexEmbed
         final MessageEmbed embed = EmbedMaker.make(color, I18NManager.getValue(user.getUserLanguage(), title, titleReplace), null, field);
         final MessageAction messageAction = channel.sendMessage(embed);
 
+        if (orderConsumer != null)
+        {
+            orderConsumer.accept(order);
+        }
+
         if(messageConsumer != null)
         {
             messageAction.queue(messageConsumer);
@@ -148,7 +153,5 @@ public class ComplexEmbed
         {
             messageAction.queue();
         }
-
-        if (orderConsumer != null) { orderConsumer.accept(order); }
     }
 }

@@ -1,4 +1,4 @@
-package fr.antoinerochas.cerebrum.command.api;
+package fr.antoinerochas.cerebrum.command.framework;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

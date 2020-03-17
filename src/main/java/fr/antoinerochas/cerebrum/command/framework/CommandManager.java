@@ -1,4 +1,4 @@
-package fr.antoinerochas.cerebrum.command.api;
+package fr.antoinerochas.cerebrum.command.framework;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
 import net.dv8tion.jda.api.JDA;

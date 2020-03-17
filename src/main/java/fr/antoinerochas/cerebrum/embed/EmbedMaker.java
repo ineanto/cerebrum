@@ -1,4 +1,4 @@
-package fr.antoinerochas.cerebrum.utils;
+package fr.antoinerochas.cerebrum.embed;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;

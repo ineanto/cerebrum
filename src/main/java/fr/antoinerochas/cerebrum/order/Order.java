@@ -5,7 +5,7 @@ import fr.antoinerochas.cerebrum.i18n.I18N;
 import fr.antoinerochas.cerebrum.jda.api.ReactionListener;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import fr.antoinerochas.cerebrum.utils.Color;
-import fr.antoinerochas.cerebrum.utils.ComplexEmbed;
+import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
 import fr.antoinerochas.cerebrum.utils.EventWaiter;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.PrivateChannel;
@@ -63,7 +63,7 @@ public class Order implements Cloneable
     /**
      * Order's step.
      */
-    private transient OrderStep step;
+    private transient OrderStepType step;
 
     /**
      * Represents if an order is done.
@@ -89,7 +89,7 @@ public class Order implements Cloneable
         this.price = price;
         this.ordered = ordered;
         this.deadline = deadline;
-        this.step = OrderStep.TYPE;
+        this.step = OrderStepType.TYPE;
     }
 
     /**
@@ -98,7 +98,7 @@ public class Order implements Cloneable
      * @param channel      the channel
      * @param cerebrumUser the user
      */
-    public void processStep(PrivateChannel channel, CerebrumUser cerebrumUser)
+    public void process(PrivateChannel channel, CerebrumUser cerebrumUser)
     {
         final EventWaiter eventWaiter = Cerebrum.getEventWaiter();
         final AtomicBoolean pass = new AtomicBoolean(false);
@@ -108,9 +108,7 @@ public class Order implements Cloneable
         successEmbed.setTitle(I18N.Global.SUCCESS);
         successEmbed.setOrder(this);
 
-        // wtf
-        // not very optimized, rework later
-        // but i don't think i can make something better for now
+        // can be further optimized ?
         switch (step)
         {
             case TYPE:
@@ -129,42 +127,42 @@ public class Order implements Cloneable
                     successEmbed.setDescriptionReplace("Type");
                     successEmbed.setMessage(I18N.Messages.Order.UPDATE_MSG);
                     // Speaker Emoji -> Discord
-                    handler.registerReaction("\ud83d\udd0a", (ret) ->
+                    handler.registerReaction("\uD83D\uDD0A", (ret) ->
                             {
                                 successEmbed.setOrderConsumer(order ->
                                 {
                                     order.setType(OrderType.DISCORD);
                                     successEmbed.setMessageReplace(type.getName());
-                                    processNextStep(channel, cerebrumUser);
-                                    handler.disable();
                                 });
                                 successEmbed.send();
+                                processNextStep(channel, cerebrumUser);
+                                handler.disable();
                             }
                     );
-                    // Controller Emoji -> Minecraft
-                    handler.registerReaction("\ud83c\udfae", (ret) ->
+                    // Controller Emoji -> Minecraft🎥🎥
+                    handler.registerReaction("\uD83C\uDFAE", (ret) ->
                             {
                                 successEmbed.setOrderConsumer(order ->
                                 {
                                     order.setType(OrderType.MINECRAFT);
                                     successEmbed.setMessageReplace(type.getName());
-                                    processNextStep(channel, cerebrumUser);
-                                    handler.disable();
                                 });
                                 successEmbed.send();
+                                processNextStep(channel, cerebrumUser);
+                                handler.disable();
                             }
                     );
                     // Computer Emoji -> Application
-                    handler.registerReaction("\uD83D\uDDA5️", (ret) ->
+                    handler.registerReaction("\uD83D\uDCBB", (ret) ->
                             {
                                 successEmbed.setOrderConsumer(order ->
                                 {
                                     order.setType(OrderType.APPLICATION);
                                     successEmbed.setMessageReplace(type.getName());
-                                    processNextStep(channel, cerebrumUser);
-                                    handler.disable();
                                 });
                                 successEmbed.send();
+                                processNextStep(channel, cerebrumUser);
+                                handler.disable();
                             }
                     );
                     // Thought Ballon Emoji -> Other
@@ -174,10 +172,10 @@ public class Order implements Cloneable
                                 {
                                     order.setType(OrderType.OTHER);
                                     successEmbed.setMessageReplace(type.getName());
-                                    processNextStep(channel, cerebrumUser);
-                                    handler.disable();
                                 });
                                 successEmbed.send();
+                                processNextStep(channel, cerebrumUser);
+                                handler.disable();
                             }
                     );
                     Cerebrum.getReactionManager().addReactionListener(Cerebrum.GUILD.getIdLong(), message, handler);
@@ -192,6 +190,7 @@ public class Order implements Cloneable
                 descriptionEmbed.setDescription(I18N.Messages.Order.DESCRIPTION_DESC);
                 descriptionEmbed.setMessage(I18N.Messages.Order.DESCRIPTION_MSG);
                 descriptionEmbed.setOrder(this);
+                descriptionEmbed.send();
                 eventWaiter.waitForEvent(MessageReceivedEvent.class,
                         event ->
                                 event.getMessage().getIdLong() != channel.getLatestMessageIdLong() &&
@@ -201,9 +200,10 @@ public class Order implements Cloneable
                         event ->
                         {
                             final String description = event.getMessage().getContentRaw();
-                            successEmbed.setDescription(I18N.Messages.Order.SUCCESS_DESC);
+                            successEmbed.setDescription(I18N.Messages.Order.UPDATE_DESC);
+                            successEmbed.setDescriptionReplace("Description");
                             successEmbed.setMessage(I18N.Messages.Order.UPDATE_MSG);
-                            successEmbed.setMessageReplace("Description");
+                            successEmbed.setMessageReplace("Description updated!");
                             successEmbed.send();
                             processNextStep(channel, cerebrumUser);
                         });
@@ -260,7 +260,7 @@ public class Order implements Cloneable
     private void processNextStep(PrivateChannel channel, CerebrumUser cerebrumUser)
     {
         setStep(getNextStep());
-        processStep(channel, cerebrumUser);
+        process(channel, cerebrumUser);
     }
 
     public String getCustomerId()
@@ -323,7 +323,7 @@ public class Order implements Cloneable
         this.deadline = deadline;
     }
 
-    public OrderStep getStep()
+    public OrderStepType getStep()
     {
         return step;
     }
@@ -333,20 +333,20 @@ public class Order implements Cloneable
         setStep(getNextStep());
     }
 
-    public OrderStep getNextStep()
+    public OrderStepType getNextStep()
     {
-        OrderStep step = OrderStep.values()[getStep().ordinal() + 1];
-        return step == null ? OrderStep.DONE : step;
+        OrderStepType step = OrderStepType.values()[getStep().ordinal() + 1];
+        return step == null ? OrderStepType.DONE : step;
     }
 
-    public void setStep(OrderStep step)
+    public void setStep(OrderStepType step)
     {
         this.step = step;
     }
 
     public boolean isDone()
     {
-        return step == OrderStep.DONE;
+        return step == OrderStepType.DONE;
     }
 
     @Override
