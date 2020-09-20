@@ -68,7 +68,7 @@ public class JDAManager
         String token = System.getenv(envar);
         LOGGER.debug(token == null ? "envar found!" : "envar not found (ran in IntelliJ ?)...");
 
-        // If the envar is null or not present, exit.
+        // If the envar is null, exit.
         if (token == null)
         {
             LOGGER.error("envar is not present!");

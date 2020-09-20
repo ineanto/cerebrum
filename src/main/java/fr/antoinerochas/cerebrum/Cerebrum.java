@@ -36,8 +36,10 @@ import java.util.Scanner;
 public class Cerebrum
 {
     /**
-     * Log4J's {@link Logger} instance. <p>
-     * Used mainly at boot, as separate modules all have a <p>
+     * Log4J's {@link Logger} instance.
+     * <p>
+     * Used mainly at boot, as separate modules all have a
+     * <p>
      * dedicated {@link Logger} instance to facilitate debugging.
      */
     public static final Logger LOGGER = LogManager.getLogger(Cerebrum.class);
@@ -63,8 +65,10 @@ public class Cerebrum
     public static final String OWNER = "281511510176563201";
 
     /**
-     * Determines if {@code Cerebrum} is in debug mode. <p>
-     * Enabling debug will provide additional information <p>
+     * Determines if {@code Cerebrum} is in debug mode.
+     * <p>
+     * Enabling debug will provide additional information
+     * <p>
      * about {@code Cerebrum}'s work, requests, activities and much more.
      */
     public static boolean DEBUG = false;
@@ -80,13 +84,15 @@ public class Cerebrum
     public static Guild GUILD;
 
     /**
-     * The debug flag that will trigger {@code Cerebrum} <p>
+     * The debug flag that will trigger {@code Cerebrum}
+     * <p>
      * to enable debugging and set {@link #DEBUG} to {@link Boolean#TRUE}.
      */
     private static final String debugFlag = "-DEBUG";
 
     /**
-     * Represents the current {@link JDA}'s instance <p>
+     * Represents the current {@link JDA}'s instance
+     * <p>
      * {@code Cerebrum} is currently using.
      */
     private static JDA jda;
@@ -126,7 +132,6 @@ public class Cerebrum
      */
     private static EventWaiter eventWaiter;
 
-
     /**
      * Java's application entry point.
      *
@@ -140,22 +145,22 @@ public class Cerebrum
             DEBUG = true;
             Configurator.setRootLevel(Level.DEBUG);
             LOGGER.debug("Debug Mode has been enabled. " + APP + " will not be able to take");
-            LOGGER.debug("any orders and will use a FakeDB. Proceed carefully (づ｡◕‿‿◕｡)づ !");
+            LOGGER.debug("any orders and will use a fake database. Proceed carefully (づ｡◕‿‿◕｡)づ !");
             LOGGER.debug("(You can disable Debug Mode by removing the \"-DEBUG\" flag.)");
         }
 
         // Launch Cerebrum.
         LOGGER.info("Starting " + APP + " " + VERSION + "...");
-        LOGGER.info("Copyright (c) 2020-present Antoine \"Aro\" ROCHAS.");
+        LOGGER.info("Copyright (c) 2020 Antoine \"Aro\" ROCHAS.");
         LOGGER.info("Loading...");
 
         // Instantiate JDAManager.
-        JDAManager jdaManager = new JDAManager(eventWaiter = new EventWaiter());
+        final JDAManager jdaManager = new JDAManager(eventWaiter = new EventWaiter());
         // Instantiate ConfigManager.
         configManager = new ConfigManager();
         configManager.loadConfiguration();
 
-        // Try to connect to JDA!
+        // Try to connect to JDA.
         try
         {
             // Connection succeeded!
@@ -169,11 +174,11 @@ public class Cerebrum
             GUILD = jda.getGuildById(guildId);
             if (GUILD == null)
             {
-                LOGGER.error("Can't find Guild/Server with ID: " + guildId + "!");
+                LOGGER.error("Can't find Guild/Server with ID: ${GUILDID}!");
                 System.exit(-1);
                 return;
             }
-            LOGGER.info("Guild found (name=\"" + GUILD.getName() + "\", id=" + GUILD.getId() + ").");
+            LOGGER.info("Guild found (name=\"${GUILD}\", id=${GUILDID}).");
 
             // Getting channels from the configuration.
             if (configManager.getLogChannelId().isEmpty())
@@ -237,8 +242,8 @@ public class Cerebrum
     public static void reload() throws IOException
     {
         LOGGER.info("Reloading Cerebrum...");
-        configManager.loadConfiguration();
         userManager.saveAll();
+        configManager.loadConfiguration();
         LOGGER.info("Done, please consider rebooting if you encounter any issues.");
     }
 

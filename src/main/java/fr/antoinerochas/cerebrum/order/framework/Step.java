@@ -1,7 +1,11 @@
 package fr.antoinerochas.cerebrum.order.framework;
 
+import fr.antoinerochas.cerebrum.embed.EmbedMaker;
+import fr.antoinerochas.cerebrum.i18n.I18N;
+import fr.antoinerochas.cerebrum.i18n.I18NManager;
 import fr.antoinerochas.cerebrum.order.Order;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
+import fr.antoinerochas.cerebrum.utils.Color;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -12,7 +16,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
  * @author aro on 17/03/2020
  * @since 1.0
  */
-public abstract class OrderStep
+public abstract class Step
 {
     /**
      * The message.
@@ -41,7 +45,7 @@ public abstract class OrderStep
      * @param order   the order
      * @param user    the user
      */
-    public OrderStep(TextChannel channel, Order order, CerebrumUser user)
+    public Step(TextChannel channel, Order order, CerebrumUser user)
     {
         this.channel = channel;
         this.order = order;
@@ -94,7 +98,10 @@ public abstract class OrderStep
      * @param order the order
      * @param user  the user
      */
-    public abstract void panic(Order order, CerebrumUser user);
+    public void panic(Order order, CerebrumUser user)
+    {
+        EmbedMaker.make(Color.RED, I18NManager.getValue(user.getUserLanguage(), I18N.Global.ERROR), "");
+    }
 
     /**
      * Performs a basic check.

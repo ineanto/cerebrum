@@ -1,7 +1,7 @@
 package fr.antoinerochas.cerebrum.order.step;
 
 import fr.antoinerochas.cerebrum.order.Order;
-import fr.antoinerochas.cerebrum.order.framework.OrderStep;
+import fr.antoinerochas.cerebrum.order.framework.Step;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
  * @author aro on 17/03/2020
  * @since 1.0
  */
-public class TypeStep extends OrderStep
+public class TypeStep extends Step
 {
     /**
      * Constructor.
@@ -41,7 +41,6 @@ public class TypeStep extends OrderStep
     @Override
     public void process(Message message, Order order, CerebrumUser user)
     {
-
     }
 
     @Override

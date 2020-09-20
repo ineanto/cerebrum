@@ -26,10 +26,11 @@ public class UserManager
     public static final Logger LOGGER = LogManager.getLogger(UserManager.class);
 
     /**
-     * Represents the current {@link JDA}'s instance <p>
+     * Represents the current {@link JDA}'s instance
+     * <p>
      * {@code Cerebrum} is currently using.
      */
-    private JDA jda;
+    private final JDA jda;
 
     /**
      * Represents all loaded users.
