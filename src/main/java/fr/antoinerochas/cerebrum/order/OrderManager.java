@@ -72,7 +72,6 @@ public class OrderManager
     public void startOrderProcess(User user)
     {
         // TODO: 27/02/2020 Finish eventually...
-
         final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
         final PrivateChannel channel = user.openPrivateChannel().complete();
         final String id = user.getId();

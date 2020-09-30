@@ -108,7 +108,7 @@ public class Order implements Cloneable
         successEmbed.setTitle(I18N.Global.SUCCESS);
         successEmbed.setOrder(this);
 
-        // can be further optimized ?
+        // can be optimized ?
         switch (step)
         {
             case TYPE:

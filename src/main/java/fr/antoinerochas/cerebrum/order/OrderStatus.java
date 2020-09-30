@@ -30,7 +30,8 @@ public enum OrderStatus
     OFF,
 
     /**
-     * Debug status, Cerebrum will not use a Production DB.
+     * Debug status, Cerebrum will not use a temporary
+     * database which will be cleaned up after each restart.
      */
     DEBUG
 }
