@@ -3,4 +3,4 @@ language: java
 os: linux
 
 jdk:
-  - openjdk13
+  - openjdk15
