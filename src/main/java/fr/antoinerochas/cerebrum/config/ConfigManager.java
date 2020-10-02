@@ -2,7 +2,9 @@ package fr.antoinerochas.cerebrum.config;
 
 import com.google.gson.reflect.TypeToken;
 import fr.antoinerochas.cerebrum.json.GsonManager;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,14 +29,22 @@ public class ConfigManager
     public static final Logger LOGGER = LogManager.getLogger(ConfigManager.class);
 
     /**
+     * Represents the current {@link JDA}'s instance
+     * <p>
+     * {@code Cerebrum} is currently using.
+     */
+    private final JDA jda;
+
+    /**
      * The "physical" configuration file.
      */
     private static File configuration;
 
+    public ConfigManager(JDA jda) { this.jda = jda; }
+
     /**
      * Loads the configuration file and <p>
      * return an instance of {@link ConfigManager}.
-     *
      */
     public void loadConfiguration() throws IOException
     {
@@ -77,6 +87,16 @@ public class ConfigManager
     }
 
     /**
+     * Get the order channel ID as a JDA {@link net.dv8tion.jda.api.entities.GuildChannel}.
+     *
+     * @return the order channel ID present in configuration
+     */
+    public GuildChannel getOrderChannel()
+    {
+        return jda.getGuildChannelById(getOrderChannelId());
+    }
+
+    /**
      * Get the log channel ID.
      *
      * @return the log channel ID present in configuration
@@ -84,6 +104,16 @@ public class ConfigManager
     public String getLogChannelId()
     {
         return (String) getValue("logChannel");
+    }
+
+    /**
+     * Get the log channel ID as a JDA {@link net.dv8tion.jda.api.entities.GuildChannel}.
+     *
+     * @return the order channel ID present in configuration
+     */
+    public GuildChannel getLogChannel()
+    {
+        return jda.getGuildChannelById(getLogChannelId());
     }
 
     /**

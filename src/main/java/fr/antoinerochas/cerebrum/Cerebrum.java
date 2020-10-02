@@ -156,9 +156,6 @@ public class Cerebrum
 
         // Instantiate JDAManager.
         final JDAManager jdaManager = new JDAManager(eventWaiter = new EventWaiter());
-        // Instantiate ConfigManager.
-        configManager = new ConfigManager();
-        configManager.loadConfiguration();
 
         // Try to connect to JDA.
         try
@@ -166,6 +163,10 @@ public class Cerebrum
             // Connection succeeded!
             jda = jdaManager.login();
             LOGGER.info("Logged into JDA.");
+
+            // Instantiate ConfigManager.
+            configManager = new ConfigManager(jda);
+            configManager.loadConfiguration();
 
             // Checking channels validity...
             LOGGER.info("Checking channels...");
