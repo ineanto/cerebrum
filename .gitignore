@@ -26,7 +26,13 @@ config.json
 *.tar.gz
 *.rar
 
-# ItelliJ IDEA related files
+# VS Code
+.settings/
+.classpath
+.factorypath
+.project
+
+# IntelliJ IDEA related files
 .idea
 dependency-reduced-pom.xml
 target/

@@ -24,6 +24,11 @@ import java.util.HashMap;
 public class I18NManager
 {
     /**
+     * Bot's default language.
+     */
+    public static final Language DEFAULT_LANGUAGE = Language.ENGLISH;
+
+    /**
      * Log4J's {@link Logger} instance.
      */
     public static final Logger LOGGER = LogManager.getLogger(I18NManager.class);
@@ -37,10 +42,10 @@ public class I18NManager
      */
     public static String getValue(Language language, String key, String... replace)
     {
-        if (language == null) { return null; }
+        if (language == null) language = I18NManager.DEFAULT_LANGUAGE;
         if (key == null) { return null; }
 
-        LOGGER.debug("Getting key (lang=" + language.getCode() + ", key=" + key + ")...");
+        LOGGER.debug("I18N Fetch (l=" + language.getCode() + ",k=" + key + ")...");
 
         // Instantiate an HashMap type.
         final Type hashMapType = new TypeToken<HashMap<String, String>>() {}.getType();
@@ -54,15 +59,15 @@ public class I18NManager
             // Get the value from the Map according to the key.
             String value = map.get(key);
 
-            // Some log.
-            LOGGER.debug("Successfully read \"" + key + "\" from Lang File.");
-
             // If the key is null, return the key and give an error in console.
             if (value == null)
             {
                 LOGGER.error("\"" + key + "\" can't be found in " + language.getCode() + " (" + language.getCode() + "), skipping");
                 return language.getCode() + "-" + key;
             }
+
+            // Log if succeeded.-
+            LOGGER.debug("Success.");
 
             if (replace != null && replace.length != 0)
             {

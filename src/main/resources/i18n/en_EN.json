@@ -16,7 +16,7 @@
   "msg.order.description.desc": "Read carefully!",
   "msg.order.description.msg": "Please describe your project. Please be short, precise, and tell as much information as possible. The more you say, the faster the order can be validated and processed.",
   "msg.order.price.desc": "Let's talk money.",
-  "msg.order.price.msg": "Please specify the price you offer for your order. Depending on the size and time your order will take, the price may be ranging from 5 € to 200 €. A price lower or higher than these will be declined. Note: I can adjust the price at ANY moment. No refunds.",
+  "msg.order.price.msg": "Please specify the price you offer for your order. Note: I can adjust the price at ANY moment. No refunds.",
   "msg.order.price.error": "Specify a valid price.",
   "msg.i18n.title": "Language selection",
   "msg.i18n.desc": "It's you time to choose!",

@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.antoinerochas.cerebrum.json.GsonManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -91,9 +91,9 @@ public class ConfigManager
      *
      * @return the order channel ID present in configuration
      */
-    public GuildChannel getOrderChannel()
+    public TextChannel getOrderChannel()
     {
-        return jda.getGuildChannelById(getOrderChannelId());
+        return jda.getTextChannelById(getOrderChannelId());
     }
 
     /**
@@ -111,9 +111,9 @@ public class ConfigManager
      *
      * @return the order channel ID present in configuration
      */
-    public GuildChannel getLogChannel()
+    public TextChannel getLogChannel()
     {
-        return jda.getGuildChannelById(getLogChannelId());
+        return jda.getTextChannelById(getLogChannelId());
     }
 
     /**

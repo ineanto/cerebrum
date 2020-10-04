@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.function.Consumer;
 
 /**
@@ -20,19 +20,21 @@ import java.util.function.Consumer;
 public class ComplexEmbed
 {
     private final MessageChannel channel;
-    private final CerebrumUser user;
-    private Color color;
-    private String title, description, message;
-    private Order order;
-    private Consumer<Order> orderConsumer = null;
+    private       CerebrumUser   user;
+    private       Color          color;
+    private       String         title, description, message;
+    private Order             order;
+    private Consumer<Order>   orderConsumer   = null;
     private Consumer<Message> messageConsumer = null;
-    private String[] titleReplace, descriptionReplace, messageReplace;
+    private String[]          titleReplace, descriptionReplace, messageReplace;
 
     public ComplexEmbed(MessageChannel channel, CerebrumUser user)
     {
         this.channel = channel;
         this.user = user;
     }
+
+    public ComplexEmbed(MessageChannel channel) { this.channel = channel; }
 
     public Color getColor()
     {
@@ -136,8 +138,11 @@ public class ComplexEmbed
 
     public void send()
     {
-        final MessageEmbed.Field field = new MessageEmbed.Field(I18NManager.getValue(user.getUserLanguage(), description, descriptionReplace), I18NManager.getValue(user.getUserLanguage(), message, messageReplace), true);
-        final MessageEmbed embed = EmbedMaker.make(color, I18NManager.getValue(user.getUserLanguage(), title, titleReplace), null, field);
+        final String name = description == null ? "N/A (D)" : I18NManager.getValue(user == null ? I18NManager.DEFAULT_LANGUAGE : user.getUserLanguage(), description, descriptionReplace);
+        final String value = message == null ? "N/A (M)" : I18NManager.getValue(user == null ? I18NManager.DEFAULT_LANGUAGE : user.getUserLanguage(), message, messageReplace);
+        final String titlei18n = I18NManager.getValue(user == null ? I18NManager.DEFAULT_LANGUAGE : user.getUserLanguage(), title, titleReplace);
+        final MessageEmbed.Field field = new MessageEmbed.Field(name, value, true);
+        final MessageEmbed embed = EmbedMaker.make(color, titlei18n, null, field);
         final MessageAction messageAction = channel.sendMessage(embed);
 
         if (orderConsumer != null)
@@ -145,7 +150,7 @@ public class ComplexEmbed
             orderConsumer.accept(order);
         }
 
-        if(messageConsumer != null)
+        if (messageConsumer != null)
         {
             messageAction.queue(messageConsumer);
         }

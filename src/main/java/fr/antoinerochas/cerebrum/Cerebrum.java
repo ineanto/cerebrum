@@ -7,10 +7,13 @@ import fr.antoinerochas.cerebrum.config.ConfigManager;
 import fr.antoinerochas.cerebrum.console.CLIManager;
 import fr.antoinerochas.cerebrum.console.CLIReload;
 import fr.antoinerochas.cerebrum.console.CLIStop;
+import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
+import fr.antoinerochas.cerebrum.i18n.I18N;
 import fr.antoinerochas.cerebrum.jda.JDAManager;
 import fr.antoinerochas.cerebrum.jda.api.ReactionManager;
 import fr.antoinerochas.cerebrum.order.OrderManager;
 import fr.antoinerochas.cerebrum.user.UserManager;
+import fr.antoinerochas.cerebrum.utils.Color;
 import fr.antoinerochas.cerebrum.utils.EventWaiter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -145,7 +148,7 @@ public class Cerebrum
             DEBUG = true;
             Configurator.setRootLevel(Level.DEBUG);
             LOGGER.debug("Debug Mode has been enabled. " + APP + " will not be able to take");
-            LOGGER.debug("any orders and will use a fake database. Proceed carefully (づ｡◕‿‿◕｡)づ !");
+            LOGGER.debug("any orders and will use a fake database. Happy debugging(?)!");
             LOGGER.debug("(You can disable Debug Mode by removing the \"-DEBUG\" flag.)");
         }
 
@@ -212,6 +215,10 @@ public class Cerebrum
 
             // When everything finished loading
             // add a shutdown hook and let live.
+            ComplexEmbed embed = new ComplexEmbed(configManager.getLogChannel());
+            embed.setColor(Color.GREEN);
+            embed.setTitle(I18N.App.START);
+            embed.send();
             LOGGER.info("Done loading!");
             LOGGER.info("Use CTRL+C or type \"stop\" to quit.");
             RUNNING = true;

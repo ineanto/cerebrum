@@ -1,6 +1,6 @@
 {
-  "app.start": "{0} a été lancé(e).",
-  "app.shutdown": "{0} c'est arrêté.",
+  "app.start": "{0} a été lancé.",
+  "app.shutdown": "{0} s'arrête.",
   "global.null": "N/A",
   "global.success": "Succès !",
   "global.error": "Erreur...",
@@ -9,17 +9,17 @@
   "msg.order.alreadyordering": "Vous avez déjà une commande en cours ! Tapez \"?resume\" pour y revenir.",
   "msg.order.success.desc": "Plus que quelques détails à régler...",
   "msg.order.progress": "({0}/{1}) {2}:",
-  "msg.order.update.desc": "{0} de la commande mis(e)-à-jour :",
+  "msg.order.update.desc": "{0} de la commande mis(e)-à-jour:",
   "msg.order.update.msg": "{0}.",
   "msg.order.type.desc": "Choisissez en dessous.",
-  "msg.order.type.msg":"Je peux effectuer de nombreux type de commandes :\n\uD83D\uDD0A : Discord\n\uD83C\uDFAE : Plugin Minecraft\n\uD83D\uDDA5️ : Application Standalone\n\uD83D\uDCAD : Autre (à préciser en description)\nChoisissez en réagissant.",
+  "msg.order.type.msg": "Je peux effectuer de nombreux type de commandes:\n\uD83D\uDD0A : Discord\n\uD83C\uDFAE : Plugin Minecraft\n\uD83D\uDDA5️ : Application Standalone\n\uD83D\uDCAD: Autre (à préciser en description)\nChoisissez en réagissant.",
   "msg.order.description.desc": "Lisez attentivement!",
   "msg.order.description.msg": "Décrivez votre projet. Merci d'être court, précis et détaillez autant que vous le pouvez. Le plus il y a, le plus de chances la commande a la possibilité d'être validée et effectuée vite.",
   "msg.order.price.desc": "Parlons argent.",
-  "msg.order.price.msg": "Précisez le prix que vous offrez pour cette commande. Dépendant de la taille et du temps, la prix peut varier entre 5€ et 200€. Un prix plus bas/haut se verra refuser. Note : Je me réserve le droit de modifier le prix a N'IMPORTE quel moment. Pas de remboursements.",
+  "msg.order.price.msg": "Précisez le prix que vous offrez pour cette commande. Dépendant de la taille et du temps, la prix peut varier. Note : Je me réserve le droit de modifier le prix a N'IMPORTE quel moment. Aucun remboursement ne se verra effectué.",
   "msg.order.price.error": "Prix incorrect.",
   "msg.i18n.title": "Sélection de la langue",
   "msg.i18n.desc": "A votre tour !",
   "msg.i18n.msg": "Merci de sélectionner un language en réagissant avec le drapeau correspondant. Vous avez 30 secondes.",
-  "msg.i18n.update.msg": "Langue mise à jour en :"
+  "msg.i18n.update.msg": "Langue mise à jour en:"
 }
