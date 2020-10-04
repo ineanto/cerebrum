@@ -63,7 +63,7 @@ public enum Language
         }
         catch (URISyntaxException ex)
         {
-            // If it is, print an error and exit.
+            // If it's pointing to, print an error and exit.
             LOGGER.error("Failed to read: " + getCode() + ".json!", ex);
             System.exit(-1);
         }

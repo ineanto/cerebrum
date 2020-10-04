@@ -3,7 +3,6 @@ package fr.antoinerochas.cerebrum.command;
 import fr.antoinerochas.cerebrum.Cerebrum;
 import fr.antoinerochas.cerebrum.command.framework.Command;
 import fr.antoinerochas.cerebrum.command.framework.CommandExecutor;
-import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import net.dv8tion.jda.api.entities.User;
 
 /**
@@ -18,8 +17,7 @@ public class OrderCommand
     @CommandExecutor
     public void execute(User user)
     {
-        final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
-
+        //final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
         Cerebrum.getOrderManager().startOrderProcess(user);
     }
 }

@@ -230,8 +230,8 @@ public class Cerebrum
             while (RUNNING)
             {
                 // ...scan user's input for "stop".
-                Scanner scanner = new Scanner(System.in);
-                String input = scanner.nextLine();
+                final Scanner scanner = new Scanner(System.in);
+                final String input = scanner.nextLine();
                 cliManager.fetchAndExecute(input);
             }
         }
