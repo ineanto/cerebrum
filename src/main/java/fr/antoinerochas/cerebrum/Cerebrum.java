@@ -148,41 +148,40 @@ public class Cerebrum
             DEBUG = true;
             Configurator.setRootLevel(Level.DEBUG);
             LOGGER.debug("Debug Mode has been enabled. " + APP + " will not be able to take");
-            LOGGER.debug("any orders and will use a fake database. Happy debugging(?)!");
+            LOGGER.debug("any orders and will use a fake database.");
             LOGGER.debug("(You can disable Debug Mode by removing the \"-DEBUG\" flag.)");
         }
 
         // Launch Cerebrum.
         LOGGER.info("Starting " + APP + " " + VERSION + "...");
         LOGGER.info("Copyright (c) 2020 Antoine \"Aro\" ROCHAS.");
-        LOGGER.info("Loading...");
+
+        // Instantiate ConfigManager.
+        configManager = new ConfigManager();
+        configManager.loadConfiguration();
 
         // Instantiate JDAManager.
-        final JDAManager jdaManager = new JDAManager(eventWaiter = new EventWaiter());
+        final JDAManager jdaManager = new JDAManager(eventWaiter = new EventWaiter(), configManager);
 
         // Try to connect to JDA.
         try
         {
             // Connection succeeded!
             jda = jdaManager.login();
+            configManager.setJda(jda);
             LOGGER.info("Logged into JDA.");
 
-            // Instantiate ConfigManager.
-            configManager = new ConfigManager(jda);
-            configManager.loadConfiguration();
-
             // Checking channels validity...
-            LOGGER.info("Checking channels...");
-
+            LOGGER.info("Validating channels...");
             final String guildId = configManager.getGuildId();
             GUILD = jda.getGuildById(guildId);
             if (GUILD == null)
             {
-                LOGGER.error("Can't find Guild/Server with ID: ${GUILDID}!");
+                LOGGER.error("Can't find Guild/Server with ID: ${GUILDID}!".replace("${GUILDID}", guildId));
                 System.exit(-1);
                 return;
             }
-            LOGGER.info("Guild found (name=\"${GUILD}\", id=${GUILDID}).");
+            LOGGER.info("Guild found (name=\"${GUILD}\", id=${GUILDID}).".replace("${GUILD}", GUILD.getName()).replace("${GUILDID}", guildId));
 
             // Getting channels from the configuration.
             if (configManager.getLogChannelId().isEmpty())
@@ -213,14 +212,16 @@ public class Cerebrum
             cliManager.registerCommand("stop", new CLIStop());
             cliManager.registerCommand("reload", new CLIReload());
 
-            // When everything finished loading
-            // add a shutdown hook and let live.
+            // Send a log message.
             ComplexEmbed embed = new ComplexEmbed(configManager.getLogChannel());
             embed.setColor(Color.GREEN);
             embed.setTitle(I18N.App.START);
             embed.send();
-            LOGGER.info("Done loading!");
-            LOGGER.info("Use CTRL+C or type \"stop\" to quit.");
+            
+            // When everything finished loading
+            // add a shutdown hook and let live.
+            LOGGER.info("Done!");
+            LOGGER.info("Press CTRL+C or type \"stop\" to exit.");
             RUNNING = true;
 
             // Add the shutdown hook (CTRL+C/SIGTERM).

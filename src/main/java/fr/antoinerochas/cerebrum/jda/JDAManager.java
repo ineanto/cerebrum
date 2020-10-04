@@ -1,5 +1,6 @@
 package fr.antoinerochas.cerebrum.jda;
 
+import fr.antoinerochas.cerebrum.config.ConfigManager;
 import fr.antoinerochas.cerebrum.event.MessageListener;
 import fr.antoinerochas.cerebrum.event.ReactionListener;
 import fr.antoinerochas.cerebrum.utils.EventWaiter;
@@ -45,13 +46,20 @@ public class JDAManager
     private EventWaiter eventWaiter;
 
     /**
+     * The {@link ConfigManager} instance.
+     */
+    private ConfigManager configManager;
+
+    /**
      * Constructor.
      *
      * @param eventWaiter the {@link EventWaiter} instance
+     * @param configManager the {@link ConfigManager} instance
      */
-    public JDAManager(EventWaiter eventWaiter)
+    public JDAManager(EventWaiter eventWaiter, ConfigManager configManager)
     {
         this.eventWaiter = eventWaiter;
+        this.configManager = configManager;
     }
 
     /**
@@ -68,10 +76,13 @@ public class JDAManager
         String token = System.getenv(envar);
         LOGGER.debug(token == null ? "envar found!" : "envar not found (ran in IntelliJ ?)...");
 
+        LOGGER.info("Reading Token from Configuration file...");
+        token = configManager.getToken();
+
         // If the envar is null, exit.
-        if (token == null)
+        if (token == null || token.equals("token"))
         {
-            LOGGER.error("envar is not present!");
+            LOGGER.error("Token can't be found.");
             System.exit(-1);
         }
 

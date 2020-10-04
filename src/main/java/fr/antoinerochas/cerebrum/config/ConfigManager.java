@@ -33,14 +33,12 @@ public class ConfigManager
      * <p>
      * {@code Cerebrum} is currently using.
      */
-    private final JDA jda;
+    private JDA jda;
 
     /**
      * The "physical" configuration file.
      */
     private static File configuration;
-
-    public ConfigManager(JDA jda) { this.jda = jda; }
 
     /**
      * Loads the configuration file and <p>
@@ -64,6 +62,16 @@ public class ConfigManager
 
         LOGGER.info("Configuration loaded.");
         configuration = file;
+    }
+
+    /**
+     * Get the JDA token.
+     *
+     * @return the JDA token present in configuration
+     */
+    public String getToken()
+    {
+        return (String) getValue("token");
     }
 
     /**
@@ -93,6 +101,7 @@ public class ConfigManager
      */
     public TextChannel getOrderChannel()
     {
+        if(jda == null) return null;
         return jda.getTextChannelById(getOrderChannelId());
     }
 
@@ -113,6 +122,7 @@ public class ConfigManager
      */
     public TextChannel getLogChannel()
     {
+        if(jda == null) return null;
         return jda.getTextChannelById(getLogChannelId());
     }
 
@@ -125,6 +135,20 @@ public class ConfigManager
     {
         return (ArrayList<String>) getValue("operators");
     }
+
+    /**
+     * Set the JDA instance.
+     * 
+     * @param jda JDA's instance
+     */
+    public void setJda(JDA jda) { this.jda = jda; }
+
+    /**
+     * Get JDA instance.
+     * 
+     * @return JDA's instance
+     */
+    public JDA getJda() { return jda; }
 
     /**
      * Get a value associated to <p>
