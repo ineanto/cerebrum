@@ -23,6 +23,7 @@ public class MessageListener extends ListenerAdapter
         // If it's Cerebrum, ignore it.
         if (event.getAuthor().isBot()) { return; }
 
+        // TODO: 11/10/2020 Use the return value. 
         Cerebrum.getCommandManager().executeCommand(event.getMessage());
     }
 }

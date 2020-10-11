@@ -27,7 +27,7 @@ public class CommandManager
 
     private static final Map<Class<?>, Function<Message, ?>> ARGUMENTS_TYPE = new HashMap<>();
 
-    private Map<String, JDACommand> commands = new HashMap<>();
+    private Map<String, JDACommand> commands     = new HashMap<>();
     private Map<String, JDACommand> commandAlias = new HashMap<>();
 
     public CommandManager()
@@ -98,9 +98,9 @@ public class CommandManager
 
     private void register(JDACommand command)
     {
-        commands.put(command.getName().toLowerCase(), command);
+        commands.put(command.name().toLowerCase(), command);
 
-        for (String alias : command.getAlias())
+        for (String alias : command.alias())
         {
             commandAlias.put(alias.toLowerCase(), command);
         }
@@ -122,9 +122,9 @@ public class CommandManager
     {
         Checks.notNull(command, "command");
 
-        commands.remove(command.getName());
+        commands.remove(command.name());
 
-        for (String alias : command.getAlias())
+        for (String alias : command.alias())
         {
             String s = alias.toLowerCase();
 
@@ -140,18 +140,12 @@ public class CommandManager
         Checks.notNull(message, "message");
 
         String prefix = Cerebrum.PREFIX;
-        if (!message.getContentRaw().startsWith(prefix))
-        {
-            return false;
-        }
+        if (!message.getContentRaw().startsWith(prefix)) { return false; }
 
         String content = message.getContentRaw().substring(prefix.length());
         String[] split = content.split(" ");
 
-        if (content.isEmpty() || split.length == 0 || split[0].isEmpty())
-        {
-            return false;
-        }
+        if (content.isEmpty() || split.length == 0 || split[0].isEmpty()) { return false; }
 
         String commandName = split[0].toLowerCase();
         JDACommand command = commands.get(commandName);
@@ -159,24 +153,20 @@ public class CommandManager
         if (command == null)
         {
             command = commandAlias.get(commandName);
-
-            if (command == null)
-            {
-                return false;
-            }
+            if (command == null) { return false; }
         }
 
         LOGGER.info("{} issued command: \"{}\"", message.getAuthor().getName(), message.getContentRaw());
 
         String[] args = Arrays.copyOfRange(split, 1, split.length);
 
-        Object[] parameters = Arrays.stream(command.getMethod().getParameters())
+        Object[] parameters = Arrays.stream(command.method().getParameters())
                 .map(p -> p.getType() == String[].class ? args : ARGUMENTS_TYPE.get(p.getType()).apply(message))
                 .toArray(Object[]::new);
 
         try
         {
-            command.getMethod().invoke(command.getObject(), parameters);
+            command.method().invoke(command.object(), parameters);
         }
         catch (Exception e)
         {
