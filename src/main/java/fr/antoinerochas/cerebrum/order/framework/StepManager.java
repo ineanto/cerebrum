@@ -13,10 +13,18 @@ import java.util.HashMap;
  */
 public class StepManager
 {
-    private final HashMap<CerebrumUser, Step> steps = new HashMap<>();
+    /**
+     * List users and their associated current {@link Step}s.
+     */
+    private final HashMap<String, Step> steps = new HashMap<>();
 
-    public void getCurrentStep()
+    /**
+     * Return the current {@link Step} the {@link CerebrumUser} is at.
+     *
+     * @return the current {@link Step}
+     */
+    public Step getCurrentStep(final String id)
     {
-
+        return steps.get(id);
     }
 }

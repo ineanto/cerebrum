@@ -224,14 +224,12 @@ public class Order implements Cloneable
                                 {
                                     final String content = event.getMessage().getContentRaw();
                                     int price = Integer.parseInt(content);
-                                    System.out.println("price good boi");
                                     /*sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "orderMadeProgress", "orderPriceUpdatedMsg", this, order ->
                                             order.setPrice(price), null);*/
                                     lock.unlock();
                                 }
                                 catch (NumberFormatException e)
                                 {
-                                    System.out.println("price looser bad");
                                     /*sendOrderUpdate(channel, Color.RED, cerebrumUser, "opFailed", "opFailedDesc", "orderPriceIncorrect", this,
                                             null, null);*/
                                 }
