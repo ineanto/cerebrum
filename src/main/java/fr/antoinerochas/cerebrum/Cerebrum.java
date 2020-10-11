@@ -217,7 +217,7 @@ public class Cerebrum
             embed.setColor(Color.GREEN);
             embed.setTitle(I18N.App.START);
             embed.send();
-            
+
             // When everything finished loading
             // add a shutdown hook and let live.
             LOGGER.info("Done!");

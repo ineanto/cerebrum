@@ -33,7 +33,7 @@ public class JDAManager
     /**
      * <b>Must remains private at all costs.</b>
      * <p>
-     * This is the environment variable (env. var/envar) name
+     * This is the environment variable (env. var/envar)
      * representing the secret Discord token used
      * to log into the Discord Bot account and allow
      * {@link JDA} to work.
@@ -97,7 +97,7 @@ public class JDAManager
         builder.setStatus(OnlineStatus.ONLINE); // Set his status to Online.
 
         // Wait JDA to finish building and return the newly created instance.
-        LOGGER.info("Bot built!");
+        LOGGER.info("JDA is ready.");
         return builder.build().awaitStatus(JDA.Status.CONNECTED);
     }
 }
