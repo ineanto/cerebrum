@@ -154,7 +154,7 @@ public class UserManager
                 try
                 {
                     CerebrumUser cerebrumUser = GsonManager.loadFile(new BufferedReader(new FileReader(userFile)), CerebrumUser.class);
-                    users.put(cerebrumUser.getId(), cerebrumUser);
+                    users.put(cerebrumUser.id(), cerebrumUser);
                     LOGGER.info("Successfully loaded user " + user.getId());
                 }
                 catch (FileNotFoundException e)
@@ -221,16 +221,5 @@ public class UserManager
     private File getUserFile(User user)
     {
         return new File(userDirectory, user.getId() + ".json");
-    }
-
-    /**
-     * Refreshes user's data.
-     *
-     * @param cerebrumUser user to refresh
-     */
-    public void refreshUser(CerebrumUser cerebrumUser)
-    {
-        users.remove(cerebrumUser.getId());
-        users.put(cerebrumUser.getId(), cerebrumUser);
     }
 }

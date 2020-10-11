@@ -1,5 +1,9 @@
 package fr.antoinerochas.cerebrum.order.framework;
 
+import fr.antoinerochas.cerebrum.user.CerebrumUser;
+
+import java.util.HashMap;
+
 /**
  * This file is part of Cerebrum.
  * Manages {@link Step}.
@@ -9,4 +13,10 @@ package fr.antoinerochas.cerebrum.order.framework;
  */
 public class StepManager
 {
+    private final HashMap<CerebrumUser, Step> steps = new HashMap<>();
+
+    public void getCurrentStep()
+    {
+
+    }
 }
