@@ -102,6 +102,20 @@ public class I18NManager
     }
 
     /**
+     * Get a value associated with the
+     * <p>
+     * {@code key} from the default English language file.
+     *
+     * @param key the value's key
+     * @return the {@link String} value linked to the key
+     */
+    public static String getValue(CerebrumUser user, String key)
+    {
+        // Same, but default the language to English.
+        return getValue(getUserLanguage(user.getUser()), key);
+    }
+
+    /**
      * Get the user's language.
      *
      * @param user the user
@@ -113,7 +127,6 @@ public class I18NManager
 
         // By default, return the English language.
         if (cerebrumUser == null) return Language.ENGLISH;
-
         return Language.values()[cerebrumUser.getLanguage()];
     }
 }

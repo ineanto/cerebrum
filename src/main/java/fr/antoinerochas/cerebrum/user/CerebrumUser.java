@@ -13,8 +13,12 @@ import java.util.ArrayList;
  * @since 1.0
  */
 
-public record CerebrumUser(String id, int language, ArrayList<Order> orders, long lastOrdered)
+public record CerebrumUser(String id, ArrayList<Order> orders, long lastOrdered)
 {
+    private static int language;
+
+    public CerebrumUser(String id, int language, ArrayList<Order> orders, long lastOrdered) { this(id, orders, lastOrdered); CerebrumUser.language = language; }
+
     /**
      * Tells if a {@link User} is a {@code Cerebrum}'s operator.
      *
@@ -26,6 +30,13 @@ public record CerebrumUser(String id, int language, ArrayList<Order> orders, lon
     }
 
     public User getUser() { return Cerebrum.getJDA().getUserById(id); }
+
+    public int getLanguage()
+    {
+        return language;
+    }
+
+    public void setLanguage(int language) { this.language = language; }
 
     @Override
     public String toString()

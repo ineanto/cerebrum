@@ -3,11 +3,12 @@ package fr.antoinerochas.cerebrum.order.framework;
 import fr.antoinerochas.cerebrum.embed.EmbedMaker;
 import fr.antoinerochas.cerebrum.i18n.I18N;
 import fr.antoinerochas.cerebrum.i18n.I18NManager;
+import fr.antoinerochas.cerebrum.i18n.Language;
 import fr.antoinerochas.cerebrum.order.Order;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import fr.antoinerochas.cerebrum.utils.Color;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 /**
  * This file is part of Cerebrum.
@@ -19,14 +20,9 @@ import net.dv8tion.jda.api.entities.TextChannel;
 public abstract class Step
 {
     /**
-     * The message.
-     */
-    private Message message;
-
-    /**
      * The channel.
      */
-    private final TextChannel channel;
+    private final MessageChannel channel;
 
     /**
      * The order.
@@ -39,17 +35,28 @@ public abstract class Step
     private final CerebrumUser user;
 
     /**
+     * The message.
+     */
+    private Message message;
+
+    /**
+     * Is this step the last one ?
+     */
+    private boolean last;
+
+    /**
      * Constructor.
      *
      * @param channel the channel
      * @param order   the order
      * @param user    the user
      */
-    public Step(TextChannel channel, Order order, CerebrumUser user)
+    public Step(MessageChannel channel, Order order, CerebrumUser user)
     {
         this.channel = channel;
         this.order = order;
         this.user = user;
+        this.last = false;
     }
 
     /**
@@ -62,35 +69,32 @@ public abstract class Step
     /**
      * Called before the step processing.
      *
-     * @param message the message
-     * @param order   the order
-     * @param user    the user
-     * @see #process(Message, Order, CerebrumUser)
-     * @see #after(Message, Order, CerebrumUser)
+     * @param order the order
+     * @param user  the user
+     * @see #process(Order, CerebrumUser)
+     * @see #after(Order, CerebrumUser)
      */
-    public abstract void before(Message message, Order order, CerebrumUser user);
+    public abstract void before(Order order, CerebrumUser user);
 
     /**
      * Process the step.
      *
-     * @param message the message
-     * @param order   the order
-     * @param user    the user
-     * @see #before(Message, Order, CerebrumUser)
-     * @see #after(Message, Order, CerebrumUser)
+     * @param order the order
+     * @param user  the user
+     * @see #before(Order, CerebrumUser)
+     * @see #after(Order, CerebrumUser)
      */
-    public abstract void process(Message message, Order order, CerebrumUser user);
+    public abstract void process(Order order, CerebrumUser user);
 
     /**
      * Called after the step processing.
      *
-     * @param message the message
-     * @param order   the order
-     * @param user    the user
-     * @see #before(Message, Order, CerebrumUser)
-     * @see #process(Message, Order, CerebrumUser)
+     * @param order the order
+     * @param user  the user
+     * @see #before(Order, CerebrumUser)
+     * @see #process(Order, CerebrumUser)
      */
-    public abstract void after(Message message, Order order, CerebrumUser user);
+    public abstract void after(Order order, CerebrumUser user);
 
     /**
      * Called if something fails.
@@ -100,7 +104,7 @@ public abstract class Step
      */
     public void panic(Order order, CerebrumUser user)
     {
-        EmbedMaker.make(Color.RED, I18NManager.getValue(user.getUserLanguage(), I18N.Global.ERROR), "");
+        EmbedMaker.make(Color.RED, I18NManager.getValue(Language.values()[user.language()], I18N.Global.ERROR), I18NManager.getValue(Language.values()[user.language()], I18N.Global.ERROR_DESC));
     }
 
     /**
@@ -113,12 +117,27 @@ public abstract class Step
         return user != null && order != null;
     }
 
+    /**
+     * Tell if the {@link Step} is the last one.
+     *
+     * @return {@link Boolean#TRUE} if it is, {@link Boolean#FALSE} otherwise.
+     */
+    public boolean isLast()
+    {
+        return last;
+    }
+
+    /**
+     * Defines this {@link Step} as the last one.
+     */
+    public void setLast() { this.last = true; }
+
     public Message getMessage()
     {
         return message;
     }
 
-    public TextChannel getChannel()
+    public MessageChannel getChannel()
     {
         return channel;
     }

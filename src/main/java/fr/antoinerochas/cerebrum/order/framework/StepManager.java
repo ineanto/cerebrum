@@ -1,6 +1,8 @@
 package fr.antoinerochas.cerebrum.order.framework;
 
-import fr.antoinerochas.cerebrum.user.CerebrumUser;
+import fr.antoinerochas.cerebrum.order.step.TypeStep;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 
@@ -14,17 +16,57 @@ import java.util.HashMap;
 public class StepManager
 {
     /**
-     * List users and their associated current {@link Step}s.
+     * Log4J's {@link Logger} instance.
      */
-    private final HashMap<String, Step> steps = new HashMap<>();
+    public static final Logger LOGGER = LogManager.getLogger(StepManager.class);
 
     /**
-     * Return the current {@link Step} the {@link CerebrumUser} is at.
-     *
-     * @return the current {@link Step}
+     * List users and their associated current {@link Step}s.
      */
-    public Step getCurrentStep(final String id)
+    private final HashMap<Class<? extends Step>, Integer> positions = new HashMap<>();
+
+    /**
+     * List users and their associated current {@link Step}s.
+     */
+    private final HashMap<Integer, Class<? extends Step>> steps = new HashMap<>();
+
+    public StepManager()
     {
-        return steps.get(id);
+        registerStep(TypeStep.class);
+    }
+
+    /**
+     * Register a new step.
+     *
+     * @param step the step
+     */
+    public void registerStep(Class<? extends Step> step)
+    {
+        final int position = positions.size() + 1;
+        LOGGER.info("Registering new Step: " + step.getSimpleName() + " with pos.: " + position);
+        positions.put(step, positions.size() + 1);
+        steps.put(position, step);
+    }
+
+    /**
+     * Get the position of a {@link Step}.
+     *
+     * @param step the step
+     * @return the step's position
+     */
+    public int getStepPosition(Class<? extends Step> step)
+    {
+        return positions.get(step);
+    }
+
+    /**
+     * Get the next {@link Step} relative to the current position.
+     *
+     * @param position the position
+     * @return the next {@link Step} instance
+     */
+    public <T> T getNextStep(int position)
+    {
+        return (T) steps.get(position + 1);
     }
 }

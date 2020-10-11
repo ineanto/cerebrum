@@ -1,10 +1,12 @@
 package fr.antoinerochas.cerebrum.order.step;
 
+import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
+import fr.antoinerochas.cerebrum.i18n.I18N;
+import fr.antoinerochas.cerebrum.i18n.I18NManager;
 import fr.antoinerochas.cerebrum.order.Order;
 import fr.antoinerochas.cerebrum.order.framework.Step;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 /**
  * This file is part of Cerebrum.
@@ -21,7 +23,7 @@ public class TypeStep extends Step
      * @param order   the order
      * @param user    the user
      */
-    public TypeStep(TextChannel channel, Order order, CerebrumUser user)
+    public TypeStep(MessageChannel channel, Order order, CerebrumUser user)
     {
         super(channel, order, user);
     }
@@ -33,25 +35,23 @@ public class TypeStep extends Step
     }
 
     @Override
-    public void before(Message message, Order order, CerebrumUser user)
+    public void before(Order order, CerebrumUser user)
     {
         if(!check()) panic(order, user);
+        final ComplexEmbed embed = new ComplexEmbed(getChannel(), user);
+        embed.setTitle(I18NManager.getValue(user, I18N.Messages.Order.TYPE_MSG));
+        embed.send();
+        process(order, user);
     }
 
     @Override
-    public void process(Message message, Order order, CerebrumUser user)
+    public void process(Order order, CerebrumUser user)
     {
     }
 
     @Override
-    public void after(Message message, Order order, CerebrumUser user)
+    public void after(Order order, CerebrumUser user)
     {
 
-    }
-
-    @Override
-    public void panic(Order order, CerebrumUser user)
-    {
-        // TODO: 17/03/2020 Tell the user something's wrong.
     }
 }

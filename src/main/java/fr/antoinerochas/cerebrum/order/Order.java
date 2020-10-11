@@ -1,20 +1,12 @@
 package fr.antoinerochas.cerebrum.order;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
-import fr.antoinerochas.cerebrum.i18n.I18N;
-import fr.antoinerochas.cerebrum.jda.api.ReactionListener;
+import fr.antoinerochas.cerebrum.order.framework.Step;
+import fr.antoinerochas.cerebrum.order.step.TypeStep;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
-import fr.antoinerochas.cerebrum.utils.Color;
-import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
-import fr.antoinerochas.cerebrum.utils.EventWaiter;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.PrivateChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This file is part of Cerebrum.
@@ -63,7 +55,7 @@ public class Order implements Cloneable
     /**
      * Order's step.
      */
-    private transient OrderStepType step;
+    private transient Step step;
 
     /**
      * Represents if an order is done.
@@ -89,176 +81,15 @@ public class Order implements Cloneable
         this.price = price;
         this.ordered = ordered;
         this.deadline = deadline;
-        this.step = OrderStepType.TYPE;
     }
 
     /**
-     * Process the next Order's step.
-     *
-     * @param channel      the channel
-     * @param cerebrumUser the user
+     * Start the Order.
      */
-    public void process(PrivateChannel channel, CerebrumUser cerebrumUser)
+    public void start(PrivateChannel channel, CerebrumUser cerebrumUser)
     {
-        final EventWaiter eventWaiter = Cerebrum.getEventWaiter();
-        final AtomicBoolean pass = new AtomicBoolean(false);
-
-        final ComplexEmbed successEmbed = new ComplexEmbed(channel, cerebrumUser);
-        successEmbed.setColor(Color.GREEN);
-        successEmbed.setTitle(I18N.Global.SUCCESS);
-        successEmbed.setOrder(this);
-
-        // can be optimized ?
-        switch (step)
-        {
-            case TYPE:
-                // TODO: BUG - Apparently, if you click too fast/interact soon after the bot has been started, the interaction just does not work, strange.
-                final ComplexEmbed typeEmbed = new ComplexEmbed(channel, cerebrumUser);
-                typeEmbed.setColor(Color.ORANGE);
-                typeEmbed.setTitle(I18N.Messages.Order.PROGRESS);
-                typeEmbed.setTitleReplace("1", "4", "Type");
-                typeEmbed.setDescription(I18N.Messages.Order.TYPE_DESC);
-                typeEmbed.setMessage(I18N.Messages.Order.TYPE_MSG);
-                typeEmbed.setOrder(this);
-                typeEmbed.setMessageConsumer(message ->
-                {
-                    final ReactionListener<String> handler = new ReactionListener<>(cerebrumUser.getUser().getIdLong(), message.getId());
-                    successEmbed.setDescription(I18N.Messages.Order.UPDATE_DESC);
-                    successEmbed.setDescriptionReplace("Type");
-                    successEmbed.setMessage(I18N.Messages.Order.UPDATE_MSG);
-                    // Speaker Emoji -> Discord
-                    handler.registerReaction("\uD83D\uDD0A", (ret) ->
-                            {
-                                successEmbed.setOrderConsumer(order ->
-                                {
-                                    order.setType(OrderType.DISCORD);
-                                    successEmbed.setMessageReplace(type.getName());
-                                });
-                                successEmbed.send();
-                                processNextStep(channel, cerebrumUser);
-                                handler.disable();
-                            }
-                    );
-                    // Controller Emoji -> Minecraft🎥🎥
-                    handler.registerReaction("\uD83C\uDFAE", (ret) ->
-                            {
-                                successEmbed.setOrderConsumer(order ->
-                                {
-                                    order.setType(OrderType.MINECRAFT);
-                                    successEmbed.setMessageReplace(type.getName());
-                                });
-                                successEmbed.send();
-                                processNextStep(channel, cerebrumUser);
-                                handler.disable();
-                            }
-                    );
-                    // Computer Emoji -> Application
-                    handler.registerReaction("\uD83D\uDCBB", (ret) ->
-                            {
-                                successEmbed.setOrderConsumer(order ->
-                                {
-                                    order.setType(OrderType.APPLICATION);
-                                    successEmbed.setMessageReplace(type.getName());
-                                });
-                                successEmbed.send();
-                                processNextStep(channel, cerebrumUser);
-                                handler.disable();
-                            }
-                    );
-                    // Thought Ballon Emoji -> Other
-                    handler.registerReaction("\uD83D\uDCAD", (ret) ->
-                            {
-                                successEmbed.setOrderConsumer(order ->
-                                {
-                                    order.setType(OrderType.OTHER);
-                                    successEmbed.setMessageReplace(type.getName());
-                                });
-                                successEmbed.send();
-                                processNextStep(channel, cerebrumUser);
-                                handler.disable();
-                            }
-                    );
-                    Cerebrum.getReactionManager().addReactionListener(Cerebrum.GUILD.getIdLong(), message, handler);
-                });
-                typeEmbed.send();
-                break;
-            case DESCRIPTION:
-                final ComplexEmbed descriptionEmbed = new ComplexEmbed(channel, cerebrumUser);
-                descriptionEmbed.setColor(Color.ORANGE);
-                descriptionEmbed.setTitle(I18N.Messages.Order.PROGRESS);
-                descriptionEmbed.setTitleReplace("2", "4", "Description");
-                descriptionEmbed.setDescription(I18N.Messages.Order.DESCRIPTION_DESC);
-                descriptionEmbed.setMessage(I18N.Messages.Order.DESCRIPTION_MSG);
-                descriptionEmbed.setOrder(this);
-                descriptionEmbed.send();
-                eventWaiter.waitForEvent(MessageReceivedEvent.class,
-                        event ->
-                                event.getMessage().getIdLong() != channel.getLatestMessageIdLong() &&
-                                        !event.getAuthor().isBot() &&
-                                        event.isFromType(ChannelType.PRIVATE) &&
-                                        !event.isFromGuild(),
-                        event ->
-                        {
-                            final String description = event.getMessage().getContentRaw();
-                            successEmbed.setDescription(I18N.Messages.Order.UPDATE_DESC);
-                            successEmbed.setDescriptionReplace("Description");
-                            successEmbed.setMessage(I18N.Messages.Order.UPDATE_MSG);
-                            successEmbed.setMessageReplace("Description updated!");
-                            successEmbed.send();
-                            processNextStep(channel, cerebrumUser);
-                        });
-                break;
-            case PRICE:
-                final ReentrantLock lock = new ReentrantLock();
-                do
-                {
-                    eventWaiter.waitForEvent(MessageReceivedEvent.class,
-                            event ->
-                                    event.getMessage().getIdLong() != channel.getLatestMessageIdLong() &&
-                                            !event.getAuthor().isBot() &&
-                                            event.isFromType(ChannelType.PRIVATE) &&
-                                            !event.isFromGuild(),
-                            event ->
-                            {
-                                try
-                                {
-                                    final String content = event.getMessage().getContentRaw();
-                                    int price = Integer.parseInt(content);
-                                    /*sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "orderMadeProgress", "orderPriceUpdatedMsg", this, order ->
-                                            order.setPrice(price), null);*/
-                                    lock.unlock();
-                                }
-                                catch (NumberFormatException e)
-                                {
-                                    /*sendOrderUpdate(channel, Color.RED, cerebrumUser, "opFailed", "opFailedDesc", "orderPriceIncorrect", this,
-                                            null, null);*/
-                                }
-                            });
-                    lock.lock();
-                }
-                while (!lock.isLocked());
-                processNextStep(channel, cerebrumUser);
-                break;
-            case DEADLINE:
-                break;
-            case DONE:
-                /*sendOrderUpdate(channel, Color.GREEN, cerebrumUser, "opSuccess", "ORDERDONE", "ORDERDONE", this, order ->
-                {
-                }, null);*/
-                break;
-        }
-    }
-
-    /**
-     * Advances the Order to the next step.
-     *
-     * @param channel      the channel
-     * @param cerebrumUser the user
-     */
-    private void processNextStep(PrivateChannel channel, CerebrumUser cerebrumUser)
-    {
-        setStep(getNextStep());
-        process(channel, cerebrumUser);
+        this.step = new TypeStep(channel, this, cerebrumUser);
+        this.step.before(this, cerebrumUser);
     }
 
     public String getCustomerId()
@@ -321,7 +152,7 @@ public class Order implements Cloneable
         this.deadline = deadline;
     }
 
-    public OrderStepType getStep()
+    public Step getStep()
     {
         return step;
     }
@@ -331,20 +162,20 @@ public class Order implements Cloneable
         setStep(getNextStep());
     }
 
-    public OrderStepType getNextStep()
+    public Step getNextStep()
     {
-        OrderStepType step = OrderStepType.values()[getStep().ordinal() + 1];
-        return step == null ? OrderStepType.DONE : step;
+        final int position = Cerebrum.getOrderManager().getStepManager().getStepPosition(getStep().getClass());
+        return step.isLast() ? null : Cerebrum.getOrderManager().getStepManager().getNextStep(position);
     }
 
-    public void setStep(OrderStepType step)
+    public void setStep(Step step)
     {
         this.step = step;
     }
 
     public boolean isDone()
     {
-        return step == OrderStepType.DONE;
+        return step.isLast();
     }
 
     @Override

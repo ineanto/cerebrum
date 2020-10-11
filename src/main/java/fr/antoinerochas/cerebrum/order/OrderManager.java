@@ -1,11 +1,12 @@
 package fr.antoinerochas.cerebrum.order;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
+import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
 import fr.antoinerochas.cerebrum.i18n.I18N;
 import fr.antoinerochas.cerebrum.i18n.I18NManager;
+import fr.antoinerochas.cerebrum.order.framework.StepManager;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import fr.antoinerochas.cerebrum.utils.Color;
-import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -37,6 +38,11 @@ public class OrderManager
      * The {@link JDA} instance.
      */
     private JDA jda;
+
+    /**
+     * The {@link StepManager} instance.
+     */
+    private final StepManager stepManager = new StepManager();
 
     /**
      * Represents all the ongoing orders.
@@ -94,7 +100,7 @@ public class OrderManager
             LOGGER.debug("User " + id + " has bypassed OMS.");
         }
 
-        if(ongoingOrders.contains(id))
+        if (ongoingOrders.contains(id))
         {
             errorEmbed.setMessage(I18N.Messages.Order.ALREADY_ORDERING);
             errorEmbed.send();
@@ -106,7 +112,7 @@ public class OrderManager
         // Clone the default order and modify some fields.
         final Order order = DEFAULT_ORDER.clone();
         order.setCustomerId(id);
-        order.process(channel, cerebrumUser);
+        // TODO: 11/10/2020 Process order
         ongoingOrders.add(id);
         channel.close().complete();
     }
@@ -131,5 +137,15 @@ public class OrderManager
     public OrderStatus getStatus()
     {
         return status;
+    }
+
+    /**
+     * Get {@link StepManager}'s instance.
+     *
+     * @return {@link StepManager}'s instance
+     */
+    public StepManager getStepManager()
+    {
+        return stepManager;
     }
 }
