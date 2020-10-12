@@ -3,7 +3,7 @@ package fr.antoinerochas.cerebrum.order;
 import fr.antoinerochas.cerebrum.Cerebrum;
 import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
 import fr.antoinerochas.cerebrum.i18n.I18N;
-import fr.antoinerochas.cerebrum.i18n.I18NManager;
+import fr.antoinerochas.cerebrum.i18n.Messages;
 import fr.antoinerochas.cerebrum.order.framework.StepManager;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import fr.antoinerochas.cerebrum.utils.Color;
@@ -32,7 +32,7 @@ public class OrderManager
     /**
      * Represents the default {@link Order}.
      */
-    public static final Order DEFAULT_ORDER = new Order(I18NManager.getValue("orderNullValue"), OrderType.OTHER, I18NManager.getValue("orderNullValue"), -1, -1, -1);
+    public static final Order DEFAULT_ORDER = new Order(I18N.get(Messages.Global.NULL), OrderType.OTHER, I18N.get(Messages.Global.NULL), -1, -1, -1);
 
     /**
      * The {@link JDA} instance.
@@ -84,15 +84,15 @@ public class OrderManager
 
         final ComplexEmbed errorEmbed = new ComplexEmbed(channel, cerebrumUser);
         errorEmbed.setColor(Color.RED);
-        errorEmbed.setTitle(I18N.Global.ERROR);
-        errorEmbed.setDescription(I18N.Global.ERROR_DESC);
+        errorEmbed.setTitle(Messages.Global.ERROR);
+        errorEmbed.setDescription(Messages.Global.ERROR_DESC);
 
         // If orders are disabled, tell the user.
         if (status != OrderStatus.AVAILABLE)
         {
             if (!cerebrumUser.isOperator())
             {
-                errorEmbed.setMessage(I18N.Messages.Order.NOT_AVAILABLE);
+                errorEmbed.setMessage(Messages.Order.NOT_AVAILABLE);
                 errorEmbed.send();
                 return;
             }
@@ -102,7 +102,7 @@ public class OrderManager
 
         if (ongoingOrders.contains(id))
         {
-            errorEmbed.setMessage(I18N.Messages.Order.ALREADY_ORDERING);
+            errorEmbed.setMessage(Messages.Order.ALREADY_ORDERING);
             errorEmbed.send();
             return;
         }
@@ -112,7 +112,7 @@ public class OrderManager
         // Clone the default order and modify some fields.
         final Order order = DEFAULT_ORDER.clone();
         order.setCustomerId(id);
-        // TODO: 11/10/2020 Process order
+        order.start(channel, cerebrumUser);
         ongoingOrders.add(id);
         channel.close().complete();
     }

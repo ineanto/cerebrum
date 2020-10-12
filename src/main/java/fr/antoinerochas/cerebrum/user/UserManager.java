@@ -68,7 +68,7 @@ public class UserManager
     {
         if (users.get(user.getId()) == null)
         {
-            LOGGER.info("User " + user.getId() + " is not into cache, loading user in consequence");
+            LOGGER.debug("User " + user.getId() + " is not into cache");
             loadUser(user);
         }
 
@@ -110,17 +110,14 @@ public class UserManager
             if (userFile.exists()) { return true; }
 
             // Some logs.
-            LOGGER.info("Creating data for user " + user.getId() + "...");
+            LOGGER.debug("Creating data for user " + user.getId() + "...");
 
             // Instantiate CerebrumUser and turn it to JSON.
             final CerebrumUser cerebrumUser = new CerebrumUser(user.getId(), Language.ENGLISH.ordinal(), new ArrayList<>(), -1);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile)))
             {
                 // Create the file if it does not exists.
-                if (!userFile.exists())
-                {
-                    userFile.createNewFile();
-                }
+                if (!userFile.exists()) { userFile.createNewFile(); }
 
                 writer.write(GsonManager.GSON.toJson(cerebrumUser));
                 writer.close();
@@ -154,7 +151,7 @@ public class UserManager
                 try
                 {
                     CerebrumUser cerebrumUser = GsonManager.loadFile(new BufferedReader(new FileReader(userFile)), CerebrumUser.class);
-                    users.put(cerebrumUser.id(), cerebrumUser);
+                    users.put(cerebrumUser.getId(), cerebrumUser);
                     LOGGER.info("Successfully loaded user " + user.getId());
                 }
                 catch (FileNotFoundException e)
@@ -208,7 +205,6 @@ public class UserManager
         {
             return userDirectory.mkdirs();
         }
-
         return true;
     }
 

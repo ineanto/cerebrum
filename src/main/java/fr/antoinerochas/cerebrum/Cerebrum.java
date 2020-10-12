@@ -8,7 +8,7 @@ import fr.antoinerochas.cerebrum.console.CLIManager;
 import fr.antoinerochas.cerebrum.console.CLIReload;
 import fr.antoinerochas.cerebrum.console.CLIStop;
 import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
-import fr.antoinerochas.cerebrum.i18n.I18N;
+import fr.antoinerochas.cerebrum.i18n.Messages;
 import fr.antoinerochas.cerebrum.jda.JDAManager;
 import fr.antoinerochas.cerebrum.jda.api.ReactionManager;
 import fr.antoinerochas.cerebrum.order.OrderManager;
@@ -147,8 +147,8 @@ public class Cerebrum
         {
             DEBUG = true;
             Configurator.setRootLevel(Level.DEBUG);
-            LOGGER.debug("Debug Mode has been enabled. " + APP + " will not be able to take");
-            LOGGER.debug("any orders and will use a fake database.");
+            LOGGER.debug("Debug Mode has been enabled. " + APP + " will not use");
+            LOGGER.debug("the production database and will not save orders.");
             LOGGER.debug("(You can disable Debug Mode by removing the \"-DEBUG\" flag.)");
         }
 
@@ -215,7 +215,7 @@ public class Cerebrum
             // Send a log message.
             ComplexEmbed embed = new ComplexEmbed(configManager.getLogChannel());
             embed.setColor(Color.GREEN);
-            embed.setTitle(I18N.App.START);
+            embed.setTitle(Messages.App.START);
             embed.send();
 
             // When everything finished loading

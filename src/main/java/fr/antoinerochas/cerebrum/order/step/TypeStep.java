@@ -2,7 +2,7 @@ package fr.antoinerochas.cerebrum.order.step;
 
 import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
 import fr.antoinerochas.cerebrum.i18n.I18N;
-import fr.antoinerochas.cerebrum.i18n.I18NManager;
+import fr.antoinerochas.cerebrum.i18n.Messages;
 import fr.antoinerochas.cerebrum.order.Order;
 import fr.antoinerochas.cerebrum.order.framework.Step;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
@@ -39,7 +39,7 @@ public class TypeStep extends Step
     {
         if(!check()) panic(order, user);
         final ComplexEmbed embed = new ComplexEmbed(getChannel(), user);
-        embed.setTitle(I18NManager.getValue(user, I18N.Messages.Order.TYPE_MSG));
+        embed.setTitle(I18N.get(user, Messages.Order.TYPE_MSG));
         embed.send();
         process(order, user);
     }

@@ -4,7 +4,8 @@ import fr.antoinerochas.cerebrum.Cerebrum;
 import fr.antoinerochas.cerebrum.command.framework.Command;
 import fr.antoinerochas.cerebrum.command.framework.CommandExecutor;
 import fr.antoinerochas.cerebrum.embed.EmbedMaker;
-import fr.antoinerochas.cerebrum.i18n.I18NManager;
+import fr.antoinerochas.cerebrum.i18n.I18N;
+import fr.antoinerochas.cerebrum.i18n.Messages;
 import fr.antoinerochas.cerebrum.i18n.Language;
 import fr.antoinerochas.cerebrum.jda.api.ReactionListener;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
@@ -31,8 +32,8 @@ public class LanguageCommand
         final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
         final PrivateChannel channel = user.openPrivateChannel().complete();
 
-        MessageEmbed.Field selectLanguage = new MessageEmbed.Field(I18NManager.getValue(cerebrumUser, "langSelectionDesc"), I18NManager.getValue(cerebrumUser, "langSelectionEmbed"), true);
-        MessageEmbed lang = EmbedMaker.make(Color.GREEN, I18NManager.getValue(cerebrumUser, "langSelectionTitle"), null, selectLanguage);
+        MessageEmbed.Field selectLanguage = new MessageEmbed.Field(I18N.get(cerebrumUser, Messages.Language.MESSAGE), I18N.get(cerebrumUser, Messages.Language.DESC), true);
+        MessageEmbed lang = EmbedMaker.make(Color.GREEN, I18N.get(cerebrumUser, Messages.Language.TITLE), null, selectLanguage);
         channel.sendMessage(lang).queue(message ->
         {
             // FR FLAG: 🇫🇷
@@ -53,8 +54,8 @@ public class LanguageCommand
         final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
         final PrivateChannel channel = user.openPrivateChannel().complete();
 
-        MessageEmbed.Field selectLanguage = new MessageEmbed.Field(I18NManager.getValue(cerebrumUser, "langSelectionSuccessDesc"), language == Language.ENGLISH ? "English" : "Français", true);
-        MessageEmbed lang = EmbedMaker.make(Color.GREEN, I18NManager.getValue(cerebrumUser, "opSuccess"), null, selectLanguage);
+        MessageEmbed.Field langUpdated = new MessageEmbed.Field(I18N.get(cerebrumUser, Messages.Language.UPDATE_MSG), language == Language.ENGLISH ? "English" : "Français", true);
+        MessageEmbed lang = EmbedMaker.make(Color.GREEN, I18N.get(cerebrumUser, Messages.Global.SUCCESS), null, langUpdated);
         channel.sendMessage(lang).queue();
 
         cerebrumUser.setLanguage(language.ordinal());

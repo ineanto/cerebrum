@@ -1,6 +1,7 @@
 package fr.antoinerochas.cerebrum.user;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
+import fr.antoinerochas.cerebrum.i18n.Language;
 import fr.antoinerochas.cerebrum.order.Order;
 import net.dv8tion.jda.api.entities.User;
 
@@ -12,12 +13,35 @@ import java.util.ArrayList;
  * @author Aro at/on 27/02/2020
  * @since 1.0
  */
-
-public record CerebrumUser(String id, ArrayList<Order> orders, long lastOrdered)
+public class CerebrumUser
 {
-    private static int language;
+    /**
+     * Represent user's Discord id.
+     */
+    private String id;
 
-    public CerebrumUser(String id, int language, ArrayList<Order> orders, long lastOrdered) { this(id, orders, lastOrdered); CerebrumUser.language = language; }
+    /**
+     * Represent user's preferred language.
+     */
+    private int language;
+
+    /**
+     * Represent user's orders.
+     */
+    private ArrayList<Order> orders;
+
+    /**
+     * Represent user's last order timestamp.
+     */
+    private long lastOrdered;
+
+    public CerebrumUser(String id, int language, ArrayList<Order> orders, long lastOrdered)
+    {
+        this.id = id;
+        this.language = language;
+        this.orders = orders;
+        this.lastOrdered = lastOrdered;
+    }
 
     /**
      * Tells if a {@link User} is a {@code Cerebrum}'s operator.
@@ -26,17 +50,55 @@ public record CerebrumUser(String id, ArrayList<Order> orders, long lastOrdered)
      */
     public boolean isOperator()
     {
-        return Cerebrum.getConfigManager().getOperatorsIds().contains(id) || id.equals(Cerebrum.OWNER);
+        return Cerebrum.getConfigManager().getOperatorsIds().contains(id) || getId().equals(Cerebrum.OWNER);
     }
 
-    public User getUser() { return Cerebrum.getJDA().getUserById(id); }
+    public Language getUserLanguage()
+    {
+        return Language.values()[language];
+    }
 
     public int getLanguage()
     {
         return language;
     }
 
-    public void setLanguage(int language) { this.language = language; }
+    public void setLanguage(int language)
+    {
+        this.language = language;
+    }
+
+    public long getLastOrdered()
+    {
+        return lastOrdered;
+    }
+
+    public void setLastOrdered(long lastOrdered)
+    {
+        this.lastOrdered = lastOrdered;
+    }
+
+    public ArrayList<Order> getOrders()
+    {
+        return orders;
+    }
+
+    public void setOrders(ArrayList<Order> orders)
+    {
+        this.orders = orders;
+    }
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    public User getUser() { return Cerebrum.getJDA().getUserById(id); }
 
     @Override
     public String toString()

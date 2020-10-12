@@ -1,72 +1,132 @@
 package fr.antoinerochas.cerebrum.i18n;
 
+import com.google.gson.reflect.TypeToken;
+import fr.antoinerochas.cerebrum.Cerebrum;
+import fr.antoinerochas.cerebrum.json.GsonManager;
+import fr.antoinerochas.cerebrum.user.CerebrumUser;
+import net.dv8tion.jda.api.entities.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+
 /**
  * This file is part of Cerebrum.
- * Contains all the I18N messages's strings.
+ * Manage all the I18N of Cerebrum.
  *
- * @author Aro at/on 09/03/2020
+ * @author Aro at/on 28/01/2020
  * @since 1.0
  */
 public class I18N
 {
     /**
-     * Application messages.
+     * Bot's default language.
      */
-    public static final class App
-    {
-        private static final String PREFIX = "app.";
+    public static final Language DEFAULT_LANGUAGE = Language.ENGLISH;
 
-        public static final String START    = PREFIX + "start";
-        public static final String SHUTDOWN = PREFIX + "shutdown";
+    /**
+     * Log4J's {@link Logger} instance.
+     */
+    public static final Logger LOGGER = LogManager.getLogger(I18N.class);
+
+    /**
+     * Get a value associated to <p>
+     * the {@code key} from language file.
+     *
+     * @param key the value's key
+     * @return the {@link String} value linked to the key
+     */
+    public static String get(Language language, String key, String... replace)
+    {
+        if (language == null) language = I18N.DEFAULT_LANGUAGE;
+        if (key == null) { return null; }
+
+        LOGGER.debug("I18N Fetch (l=" + language.getCode() + ",k=" + key + ")...");
+
+        // Instantiate an HashMap type.
+        final Type hashMapType = new TypeToken<HashMap<String, String>>() {}.getType();
+
+        // Try to create a reader from the language file.
+        try (BufferedReader reader = new BufferedReader(new FileReader(language.getFile())))
+        {
+            // Read the JSON file and convert it's contents into an HashMap.
+            final HashMap<String, String> map = GsonManager.loadFile(reader, hashMapType);
+
+            // Get the value from the Map according to the key.
+            String value = map.get(key);
+
+            // If the key is null, return the key and give an error in console.
+            if (value == null)
+            {
+                LOGGER.error("\"" + key + "\" can't be found in " + language.getCode() + " (" + language.getCode() + "), skipping");
+                return language.getCode() + "-" + key;
+            }
+
+            // Log if succeeded.-
+            LOGGER.debug("Success.");
+
+            if (replace != null && replace.length != 0)
+            {
+                for (int i = 0; i < replace.length; i++)
+                {
+                    value = value.replace("{" + i + "}", replace[i]);
+                }
+            }
+
+            return value;
+        }
+        catch (IOException ex)
+        {
+            // If we fail I/O notify the user and stop the application
+            LOGGER.error("Failed to read: " + language.getFile().getName() + "(" + language.getCode() + ")!", ex);
+            return language.getCode() + "-" + key;
+        }
     }
 
     /**
-     * Global messages.
+     * Get a value associated with the
+     * <p>
+     * {@code key} from the default English language file.
+     *
+     * @param key the value's key
+     * @return the {@link String} value linked to the key
      */
-    public static final class Global
+    public static String get(String key)
     {
-        private static final String PREFIX = "global.";
-
-        public static final String NULL       = PREFIX + "null";
-        public static final String SUCCESS    = PREFIX + "success";
-        public static final String ERROR      = PREFIX + "error";
-        public static final String ERROR_DESC = PREFIX + "error.desc";
+        // Same, but default the language to English.
+        return get(Language.ENGLISH, key);
     }
 
     /**
-     * Strings for messages.
+     * Get a value associated with the
+     * <p>
+     * {@code key} from the default English language file.
+     *
+     * @param key the value's key
+     * @return the {@link String} value linked to the key
      */
-    public static final class Messages
+    public static String get(CerebrumUser user, String key)
     {
-        private static final String MSG_PREFIX = "msg.";
+        // Same, but default the language to English.
+        return get(getUserLanguage(user.getUser()), key);
+    }
 
-        public static final class Order
-        {
-            private static final String PREFIX = MSG_PREFIX + "order.";
+    /**
+     * Get the user's language.
+     *
+     * @param user the user
+     * @return user's language
+     */
+    public static Language getUserLanguage(User user)
+    {
+        CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
 
-            public static final String NOT_AVAILABLE    = PREFIX + "notavailable";
-            public static final String ALREADY_ORDERING = PREFIX + "alreadyordering";
-            public static final String SUCCESS_DESC     = PREFIX + "success.desc";
-            public static final String PROGRESS         = PREFIX + "progress";
-            public static final String UPDATE_DESC      = PREFIX + "update.desc";
-            public static final String UPDATE_MSG       = PREFIX + "update.msg";
-            public static final String TYPE_DESC        = PREFIX + "type.desc";
-            public static final String TYPE_MSG         = PREFIX + "type.msg";
-            public static final String DESCRIPTION_DESC = PREFIX + "description.desc";
-            public static final String DESCRIPTION_MSG  = PREFIX + "description.msg";
-            public static final String PRICE_DESC       = PREFIX + "price.desc";
-            public static final String PRICE_MSG        = PREFIX + "price.msg";
-            public static final String PRICE_ERROR      = PREFIX + "price.error";
-        }
-
-        public static final class Language
-        {
-            private static final String PREFIX = "msg.i18n.";
-
-            public static final String TITLE      = PREFIX + "title";
-            public static final String DESC       = PREFIX + "desc";
-            public static final String MESSAGE    = PREFIX + "msg";
-            public static final String UPDATE_MSG = PREFIX + "update.msg";
-        }
+        // By default, return the English language.
+        if (cerebrumUser == null) return Language.ENGLISH;
+        return Language.values()[cerebrumUser.getLanguage()];
     }
 }

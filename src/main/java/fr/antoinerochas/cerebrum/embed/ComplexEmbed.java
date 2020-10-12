@@ -1,6 +1,6 @@
 package fr.antoinerochas.cerebrum.embed;
 
-import fr.antoinerochas.cerebrum.i18n.I18NManager;
+import fr.antoinerochas.cerebrum.i18n.I18N;
 import fr.antoinerochas.cerebrum.order.Order;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import net.dv8tion.jda.api.entities.Message;
@@ -138,9 +138,9 @@ public class ComplexEmbed
 
     public void send()
     {
-        final String name = description == null ? "N/A (D)" : I18NManager.getValue(user == null ? I18NManager.DEFAULT_LANGUAGE : user.getUserLanguage(), description, descriptionReplace);
-        final String value = message == null ? "N/A (M)" : I18NManager.getValue(user == null ? I18NManager.DEFAULT_LANGUAGE : user.getUserLanguage(), message, messageReplace);
-        final String titlei18n = I18NManager.getValue(user == null ? I18NManager.DEFAULT_LANGUAGE : user.getUserLanguage(), title, titleReplace);
+        final String name = description == null ? "N/A (D)" : I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), description, descriptionReplace);
+        final String value = message == null ? "N/A (M)" : I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), message, messageReplace);
+        final String titlei18n = I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), title, titleReplace);
         final MessageEmbed.Field field = new MessageEmbed.Field(name, value, true);
         final MessageEmbed embed = EmbedMaker.make(color, titlei18n, null, field);
         final MessageAction messageAction = channel.sendMessage(embed);

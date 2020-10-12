@@ -1,8 +1,8 @@
 package fr.antoinerochas.cerebrum.order.framework;
 
 import fr.antoinerochas.cerebrum.embed.EmbedMaker;
+import fr.antoinerochas.cerebrum.i18n.Messages;
 import fr.antoinerochas.cerebrum.i18n.I18N;
-import fr.antoinerochas.cerebrum.i18n.I18NManager;
 import fr.antoinerochas.cerebrum.i18n.Language;
 import fr.antoinerochas.cerebrum.order.Order;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
@@ -104,7 +104,7 @@ public abstract class Step
      */
     public void panic(Order order, CerebrumUser user)
     {
-        EmbedMaker.make(Color.RED, I18NManager.getValue(Language.values()[user.language()], I18N.Global.ERROR), I18NManager.getValue(Language.values()[user.language()], I18N.Global.ERROR_DESC));
+        EmbedMaker.make(Color.RED, I18N.get(Language.values()[user.getLanguage()], Messages.Global.ERROR), I18N.get(Language.values()[user.getLanguage()], Messages.Global.ERROR_DESC));
     }
 
     /**
