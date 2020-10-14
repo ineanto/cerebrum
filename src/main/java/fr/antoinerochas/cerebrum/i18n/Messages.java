@@ -2,7 +2,7 @@ package fr.antoinerochas.cerebrum.i18n;
 
 /**
  * This file is part of Cerebrum.
- * Contains all the I18N messages's strings.
+ * Contains all the I18N messages strings.
  *
  * @author Aro at/on 09/03/2020
  * @since 1.0
