@@ -63,10 +63,10 @@ public class I18N
             if (value == null)
             {
                 LOGGER.error("\"" + key + "\" can't be found in " + language.getCode() + " (" + language.getCode() + "), skipping");
-                return language.getCode() + "-" + key;
+                return "Not Found! (" + key + " in " + language.getCode() + ")";
             }
 
-            // Log if succeeded.-
+            // Log if succeeded.
             LOGGER.debug("Success.");
 
             if (replace != null && replace.length != 0)
