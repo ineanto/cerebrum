@@ -143,7 +143,7 @@ public class ComplexEmbed
         final String titlei18n = I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), title, titleReplace);
         final MessageEmbed.Field field = new MessageEmbed.Field(name, value, true);
         final MessageEmbed embed = EmbedMaker.make(color, titlei18n, null, field);
-        final MessageAction messageAction = channel.sendMessage(embed);
+        final MessageAction messageAction = channel.sendMessageEmbeds(embed);
 
         if (orderConsumer != null)
         {

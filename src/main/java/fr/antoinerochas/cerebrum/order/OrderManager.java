@@ -114,7 +114,7 @@ public class OrderManager
         order.setCustomerId(id);
         order.start(channel, cerebrumUser);
         ongoingOrders.add(id);
-        channel.close().complete();
+        channel.delete().complete();
     }
 
     /**

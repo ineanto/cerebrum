@@ -34,7 +34,7 @@ public class LanguageCommand
 
         MessageEmbed.Field selectLanguage = new MessageEmbed.Field(I18N.get(cerebrumUser, Messages.Language.MESSAGE), I18N.get(cerebrumUser, Messages.Language.DESC), true);
         MessageEmbed lang = EmbedMaker.make(Color.GREEN, I18N.get(cerebrumUser, Messages.Language.TITLE), null, selectLanguage);
-        channel.sendMessage(lang).queue(message ->
+        channel.sendMessageEmbeds(lang).queue(message ->
         {
             // FR FLAG: 🇫🇷
             // EN FLAG: 🇬🇧
@@ -46,7 +46,7 @@ public class LanguageCommand
             Cerebrum.getReactionManager().addReactionListener(Cerebrum.GUILD.getIdLong(), message, handler);
         });
 
-        channel.close().complete();
+        channel.delete().complete();
     }
 
     private void updateLanguage(User user, Message message, Language language)
@@ -56,9 +56,9 @@ public class LanguageCommand
 
         MessageEmbed.Field langUpdated = new MessageEmbed.Field(I18N.get(cerebrumUser, Messages.Language.UPDATE_MSG), language == Language.ENGLISH ? "English" : "Français", true);
         MessageEmbed lang = EmbedMaker.make(Color.GREEN, I18N.get(cerebrumUser, Messages.Global.SUCCESS), null, langUpdated);
-        channel.sendMessage(lang).queue();
+        channel.sendMessageEmbeds(lang).queue();
 
         cerebrumUser.setLanguage(language.ordinal());
-        channel.close().complete();
+        channel.delete().complete();
     }
 }
