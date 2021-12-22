@@ -104,7 +104,7 @@ public abstract class Step
      */
     public void panic(Order order, CerebrumUser user)
     {
-        EmbedMaker.make(Color.RED, I18N.get(Language.values()[user.getLanguage()], Messages.Global.ERROR), I18N.get(Language.values()[user.getLanguage()], Messages.Global.ERROR_DESC));
+        EmbedMaker.make(Color.RED, I18N.get(user.getUserLanguage(), Messages.Global.ERROR), I18N.get(user.getUserLanguage(), Messages.Global.ERROR_DESC));
     }
 
     /**
