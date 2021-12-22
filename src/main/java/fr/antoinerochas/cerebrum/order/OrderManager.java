@@ -97,7 +97,7 @@ public class OrderManager
                 return;
             }
 
-            LOGGER.debug("User " + id + " has bypassed OMS.");
+            LOGGER.debug("User " + id + " has bypassed order manager's status.");
         }
 
         if (ongoingOrders.contains(id))
