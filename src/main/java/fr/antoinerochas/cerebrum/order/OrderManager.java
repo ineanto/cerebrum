@@ -66,7 +66,7 @@ public class OrderManager
         this.jda = jda;
         // If we're under Debug Mode, set the status in consequence.
         if (Cerebrum.DEBUG) { this.setStatus(OrderStatus.DEBUG); return; }
-        //Else, set OrderManager under the default status.
+        // Else, set OrderManager under the default status.
         this.setStatus(OrderStatus.AVAILABLE);
     }
 
