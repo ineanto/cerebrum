@@ -87,12 +87,13 @@ public class JDAManager
         }
 
         // Pass it through JDABuilder.
-        JDABuilder builder = new JDABuilder(token);
+        JDABuilder builder = JDABuilder.createDefault(token);
+
         LOGGER.info("Building Bot...");
 
         // Modify some attributes.
         builder.addEventListeners(new MessageListener(), eventWaiter, new ReactionListener());
-        builder.setDisabledCacheFlags(EnumSet.of(CacheFlag.VOICE_STATE)); // Don't cache user's voice state.
+        builder.disableCache(EnumSet.of(CacheFlag.VOICE_STATE)); // Don't cache user's voice state.
         builder.setActivity(Activity.watching("you !")); // Modify bot's activity.
         builder.setStatus(OnlineStatus.ONLINE); // Set his status to Online.
 
