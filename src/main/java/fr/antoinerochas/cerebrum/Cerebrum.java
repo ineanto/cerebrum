@@ -91,7 +91,7 @@ public class Cerebrum
      * <p>
      * to enable debugging and set {@link #DEBUG} to {@link Boolean#TRUE}.
      */
-    private static final String debugFlag = "-DEBUG";
+    private static final String debugFlag = "-debug";
 
     /**
      * Represents the current {@link JDA}'s instance
