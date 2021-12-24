@@ -9,8 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 
@@ -51,9 +51,9 @@ public class I18N
         final Type hashMapType = new TypeToken<HashMap<String, String>>() {}.getType();
 
         // Try to create a reader from the language file.
-        try (BufferedReader reader = new BufferedReader(new FileReader(language.getFile())))
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(language.getStream())))
         {
-            // Read the JSON file and convert it's contents into an HashMap.
+            // Read the JSON file and convert its contents into an HashMap.
             final HashMap<String, String> map = GsonManager.loadFile(reader, hashMapType);
 
             // Get the value from the Map according to the key.
@@ -82,8 +82,8 @@ public class I18N
         catch (IOException ex)
         {
             // If we fail I/O notify the user and stop the application
-            LOGGER.error("Failed to read: " + language.getFile().getName() + "(" + language.getCode() + ")!", ex);
-            return language.getCode() + "-" + key;
+            LOGGER.error("Failed to read I18N file (" + language.getCode() + ")!", ex);
+            return "MISSING_KEY:" + language.getCode() + "/" + key;
         }
     }
 

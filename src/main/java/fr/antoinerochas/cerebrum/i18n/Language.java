@@ -3,7 +3,7 @@ package fr.antoinerochas.cerebrum.i18n;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
+import java.io.InputStream;
 
 /**
  * This file is part of Cerebrum.
@@ -37,7 +37,7 @@ public enum Language
     /**
      * The language's associated file.
      */
-    private File file;
+    private InputStream stream;
 
     /**
      * Constructor.
@@ -48,8 +48,8 @@ public enum Language
     {
         // Setting the code.
         this.code = code;
-        this.file = new File(getClass().getResource(String.format("/resources/i18n/%s.json", getCode())).toExternalForm());
-        System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
+        final String fileName = "/i18n/%s.json".formatted(getCode());
+        this.stream = Language.class.getResourceAsStream(fileName);
     }
 
     /**
@@ -63,12 +63,12 @@ public enum Language
     }
 
     /**
-     * Get the language's code.
+     * Get the language's file stream.
      *
-     * @return the language's code
+     * @return the language's file stream
      */
-    public File getFile()
+    public InputStream getStream()
     {
-        return file;
+        return stream;
     }
 }
