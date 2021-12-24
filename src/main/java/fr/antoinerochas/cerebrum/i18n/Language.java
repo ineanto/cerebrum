@@ -4,8 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 /**
  * This file is part of Cerebrum.
@@ -50,23 +48,8 @@ public enum Language
     {
         // Setting the code.
         this.code = code;
-        // TODO: 28/01/2020 Needs to be improved/optimised.
-        // Find the file.
-        URL fileUrl = this.getClass().getClassLoader().getResource("i18n/" + getCode() + ".json");
-        try
-        {
-            // If the URL is not pointing to nothing, create the File object.
-            if (fileUrl != null)
-            {
-                this.file = new File(fileUrl.toURI());
-            }
-        }
-        catch (URISyntaxException ex)
-        {
-            // If it's pointing to, print an error and exit.
-            LOGGER.error("Failed to read: " + getCode() + ".json!", ex);
-            System.exit(-1);
-        }
+        this.file = new File(getClass().getResource(String.format("/resources/i18n/%s.json", getCode())).toExternalForm());
+        System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
     }
 
     /**
