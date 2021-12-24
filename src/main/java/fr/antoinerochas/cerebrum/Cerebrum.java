@@ -149,7 +149,7 @@ public class Cerebrum
             Configurator.setRootLevel(Level.DEBUG);
             LOGGER.debug("Debug Mode has been enabled. " + APP + " will not use");
             LOGGER.debug("the production database and will not save orders.");
-            LOGGER.debug("(You can disable Debug Mode by removing the \"-DEBUG\" flag.)");
+            LOGGER.debug("(You can disable Debug Mode by removing the \"-debug\" flag.)");
         }
 
         // Launch Cerebrum.
