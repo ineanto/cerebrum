@@ -18,8 +18,7 @@ import java.util.HashMap;
  * @author Aro at/on 30/01/2020
  * @since 1.0
  */
-public class UserManager
-{
+public class UserManager {
     /**
      * Log4J's {@link Logger} instance.
      */
@@ -52,8 +51,7 @@ public class UserManager
      *
      * @param jda the current {@link JDA} instance
      */
-    public UserManager(JDA jda)
-    {
+    public UserManager(JDA jda) {
         LOGGER.debug("Loading UserManager...");
         // Define the JDA instance.
         this.jda = jda;
@@ -64,10 +62,8 @@ public class UserManager
      *
      * @return {@link CerebrumUser}'s instance containing all user data
      */
-    public CerebrumUser getUser(User user)
-    {
-        if (users.get(user.getId()) == null)
-        {
+    public CerebrumUser getUser(User user) {
+        if (users.get(user.getId()) == null) {
             LOGGER.debug("User " + user.getId() + " is not into cache");
             loadUser(user);
         }
@@ -78,13 +74,11 @@ public class UserManager
     /**
      * Save all {@link CerebrumUser}s.
      */
-    public void saveAll()
-    {
+    public void saveAll() {
         LOGGER.info("Saving users...");
         // How much users we have saved.
         int saved = 0;
-        for (CerebrumUser value : users.values())
-        {
+        for (CerebrumUser value : users.values()) {
             // Save the user.
             saved++;
             saveUser(value.getUser());
@@ -99,10 +93,8 @@ public class UserManager
      *
      * @param user the user that we have to create data
      */
-    private boolean createUserData(User user)
-    {
-        if (checkUserDataFolder())
-        {
+    private boolean createUserData(User user) {
+        if (checkUserDataFolder()) {
             // Get user's file.
             final File userFile = getUserFile(user);
 
@@ -114,17 +106,14 @@ public class UserManager
 
             // Instantiate CerebrumUser and turn it to JSON.
             final CerebrumUser cerebrumUser = new CerebrumUser(user.getId(), Language.ENGLISH.ordinal(), new ArrayList<>(), -1);
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile)))
-            {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile))) {
                 // Create the file if it does not exists.
                 if (!userFile.exists()) { userFile.createNewFile(); }
 
                 writer.write(GsonManager.GSON.toJson(cerebrumUser));
                 writer.close();
                 return true;
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 LOGGER.error("Failed to create data for user " + user.getId() + "!", e);
                 System.exit(-1);
                 return false;
@@ -139,23 +128,17 @@ public class UserManager
      *
      * @param user the user that we have to load data from
      */
-    private void loadUser(User user)
-    {
-        if (checkUserDataFolder())
-        {
+    private void loadUser(User user) {
+        if (checkUserDataFolder()) {
             // Get user's file.
             final File userFile = getUserFile(user);
             final boolean validUserData = createUserData(user);
-            if (validUserData)
-            {
-                try
-                {
+            if (validUserData) {
+                try {
                     CerebrumUser cerebrumUser = GsonManager.loadFile(new BufferedReader(new FileReader(userFile)), CerebrumUser.class);
                     users.put(cerebrumUser.getId(), cerebrumUser);
                     LOGGER.info("Successfully loaded user " + user.getId());
-                }
-                catch (FileNotFoundException e)
-                {
+                } catch (FileNotFoundException e) {
                     LOGGER.error("Failed to load user " + user.getId() + "!", e);
                     System.exit(-1);
                 }
@@ -168,23 +151,17 @@ public class UserManager
      *
      * @param user the user that we have to save data
      */
-    private void saveUser(User user)
-    {
-        if (checkUserDataFolder())
-        {
+    private void saveUser(User user) {
+        if (checkUserDataFolder()) {
             // Get user's file.
             final File userFile = getUserFile(user);
             final boolean validUserData = getUser(user) != null;
-            if (validUserData)
-            {
+            if (validUserData) {
                 // Instantiate CerebrumUser and turn it to JSON.
                 final CerebrumUser cerebrumUser = getUser(user);
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile)))
-                {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(userFile))) {
                     writer.write(GsonManager.GSON.toJson(cerebrumUser));
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     LOGGER.error("Failed to save data for user " + user.getId() + "!", e);
                     System.exit(-1);
                 }
@@ -198,11 +175,9 @@ public class UserManager
      *
      * @return {@link Boolean#TRUE} if checked, {@link Boolean#FALSE} otherwise
      */
-    private boolean checkUserDataFolder()
-    {
+    private boolean checkUserDataFolder() {
         // If the "user" directory doesn't exist, create it.
-        if (!userDirectory.exists())
-        {
+        if (!userDirectory.exists()) {
             return userDirectory.mkdirs();
         }
         return true;
@@ -214,8 +189,7 @@ public class UserManager
      * @param user the user we have to get the file from
      * @return the user's data {@link File}
      */
-    private File getUserFile(User user)
-    {
+    private File getUserFile(User user) {
         return new File(userDirectory, user.getId() + ".json");
     }
 }

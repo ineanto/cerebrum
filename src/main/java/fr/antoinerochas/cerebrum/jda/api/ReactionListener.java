@@ -14,16 +14,14 @@ import java.util.function.Consumer;
  * @author Aro at/on 03/03/2020
  * @since 1.0
  */
-public class ReactionListener<T>
-{
+public class ReactionListener<T> {
     private final Map<String, Consumer<Message>> reactions;
     private final long userId;
     private volatile T data;
     private long expiresIn, lastAction;
     private boolean active;
 
-    public ReactionListener(long userId, T data)
-    {
+    public ReactionListener(long userId, T data) {
         this.data = data;
         this.userId = userId;
         reactions = new LinkedHashMap<>();
@@ -32,13 +30,11 @@ public class ReactionListener<T>
         expiresIn = TimeUnit.MINUTES.toMillis(1);
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return active;
     }
 
-    public void disable()
-    {
+    public void disable() {
         this.active = false;
     }
 
@@ -49,8 +45,7 @@ public class ReactionListener<T>
      * @param timeUnit time units
      * @param time     amount of time units
      */
-    public void setExpiresIn(TimeUnit timeUnit, long time)
-    {
+    public void setExpiresIn(TimeUnit timeUnit, long time) {
         expiresIn = timeUnit.toMillis(time);
     }
 
@@ -60,8 +55,7 @@ public class ReactionListener<T>
      * @param emote the emote to check for
      * @return does this listener do anything with this emote?
      */
-    public boolean hasReaction(String emote)
-    {
+    public boolean hasReaction(String emote) {
         return reactions.containsKey(emote);
     }
 
@@ -71,18 +65,15 @@ public class ReactionListener<T>
      * @param emote   the emote used
      * @param message the message bound to the reaction
      */
-    public void react(String emote, Message message)
-    {
+    public void react(String emote, Message message) {
         if (hasReaction(emote)) reactions.get(emote).accept(message);
     }
 
-    public T getData()
-    {
+    public T getData() {
         return data;
     }
 
-    public void setData(T data)
-    {
+    public void setData(T data) {
         this.data = data;
     }
 
@@ -93,24 +84,21 @@ public class ReactionListener<T>
      * @param emote    the emote to respond to
      * @param consumer the behaviour when emote is used
      */
-    public void registerReaction(String emote, Consumer<Message> consumer)
-    {
+    public void registerReaction(String emote, Consumer<Message> consumer) {
         reactions.put(emote, consumer);
     }
 
     /**
      * @return list of all emotes used in this reaction listener
      */
-    public Set<String> getEmotes()
-    {
+    public Set<String> getEmotes() {
         return reactions.keySet();
     }
 
     /**
      * updates the timestamp when the reaction was last accessed
      */
-    public void updateLastAction()
-    {
+    public void updateLastAction() {
         lastAction = System.currentTimeMillis();
     }
 
@@ -119,13 +107,11 @@ public class ReactionListener<T>
      *
      * @return timestamp in millis
      */
-    public Long getExpiresInTimestamp()
-    {
+    public Long getExpiresInTimestamp() {
         return lastAction + expiresIn;
     }
 
-    public long getUserId()
-    {
+    public long getUserId() {
         return userId;
     }
 }

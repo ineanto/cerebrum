@@ -15,8 +15,7 @@ import org.apache.logging.log4j.Logger;
  * @author Aro at/on 30/01/2020
  * @since 1.0
  */
-public class Order implements Cloneable
-{
+public class Order implements Cloneable {
     /**
      * Log4J's {@link Logger} instance.
      */
@@ -72,8 +71,7 @@ public class Order implements Cloneable
      * @param ordered     order's date of order
      * @param deadline    order's deadline
      */
-    public Order(String customerId, OrderType type, String description, int price, long ordered, long deadline)
-    {
+    public Order(String customerId, OrderType type, String description, int price, long ordered, long deadline) {
         // Define parameters.
         this.customerId = customerId;
         this.type = type;
@@ -86,101 +84,82 @@ public class Order implements Cloneable
     /**
      * Start the Order.
      */
-    public void start(PrivateChannel channel, CerebrumUser cerebrumUser)
-    {
+    public void start(PrivateChannel channel, CerebrumUser cerebrumUser) {
         this.step = new TypeStep(channel, this, cerebrumUser);
         this.step.before(this, cerebrumUser);
     }
 
-    public String getCustomerId()
-    {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(String customerId)
-    {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
-    public OrderType getType()
-    {
+    public OrderType getType() {
         return type;
     }
 
-    public void setType(OrderType type)
-    {
+    public void setType(OrderType type) {
         this.type = type;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public int getPrice()
-    {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price)
-    {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public long getOrdered()
-    {
+    public long getOrdered() {
         return ordered;
     }
 
-    public void setOrdered(long ordered)
-    {
+    public void setOrdered(long ordered) {
         this.ordered = ordered;
     }
 
-    public long getDeadline()
-    {
+    public long getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(long deadline)
-    {
+    public void setDeadline(long deadline) {
         this.deadline = deadline;
     }
 
-    public Step getStep()
-    {
+    public Step getStep() {
         return step;
     }
 
-    public void progressStep()
-    {
+    public void progressStep() {
         setStep(getNextStep());
     }
 
-    public Step getNextStep()
-    {
+    public Step getNextStep() {
         final int position = Cerebrum.getOrderManager().getStepManager().getStepPosition(getStep().getClass());
         return step.isLast() ? null : Cerebrum.getOrderManager().getStepManager().getNextStep(position);
     }
 
-    public void setStep(Step step)
-    {
+    public void setStep(Step step) {
         this.step = step;
     }
 
-    public boolean isDone()
-    {
+    public boolean isDone() {
         return step.isLast();
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Order{" +
                 "customerId='" + customerId + '\'' +
                 ", type=" + type +
@@ -194,14 +173,10 @@ public class Order implements Cloneable
     }
 
     @Override
-    public Order clone()
-    {
-        try
-        {
+    public Order clone() {
+        try {
             return (Order) super.clone();
-        }
-        catch (CloneNotSupportedException e)
-        {
+        } catch (CloneNotSupportedException e) {
             LOGGER.error("Failed to clone the Order!", e);
             return null;
         }

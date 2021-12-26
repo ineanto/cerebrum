@@ -18,8 +18,7 @@ import java.util.function.Function;
  * @author Aro at/on 28/02/2020
  * @since 1.0
  */
-public class CommandManager
-{
+public class CommandManager {
     /**
      * Log4J's {@link Logger} instance.
      */
@@ -27,11 +26,10 @@ public class CommandManager
 
     private static final Map<Class<?>, Function<Message, ?>> ARGUMENTS_TYPE = new HashMap<>();
 
-    private Map<String, JDACommand> commands     = new HashMap<>();
+    private Map<String, JDACommand> commands = new HashMap<>();
     private Map<String, JDACommand> commandAlias = new HashMap<>();
 
-    public CommandManager()
-    {
+    public CommandManager() {
         LOGGER.debug("Loading CommandManager...");
         registerArgumentType(Message.class, m -> m);
         registerArgumentType(User.class, Message::getAuthor);
@@ -42,20 +40,16 @@ public class CommandManager
         registerArgumentType(String[].class, m -> new String[0]);
     }
 
-    public void registerAll(Object... objects)
-    {
-        for (Object o : objects)
-        {
+    public void registerAll(Object... objects) {
+        for (Object o : objects) {
             register(o);
         }
     }
 
-    public void register(Object o)
-    {
+    public void register(Object o) {
         Class<?> clazz = o.getClass();
 
-        if (clazz.isAnnotationPresent(Command.class))
-        {
+        if (clazz.isAnnotationPresent(Command.class)) {
             String label = clazz.getAnnotation(Command.class).label();
 
             Method[] methods = Arrays.stream(clazz.getMethods())
@@ -69,13 +63,9 @@ public class CommandManager
 
             checkArguments(methods[0]);
             register(new JDACommand(label, alias, methods[0], o));
-        }
-        else
-        {
-            for (Method method : clazz.getDeclaredMethods())
-            {
-                if (method.isAnnotationPresent(Command.class))
-                {
+        } else {
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.isAnnotationPresent(Command.class)) {
                     String label = method.getAnnotation(Command.class).label();
                     String[] alias = clazz.getAnnotation(Command.class).alias();
 
@@ -86,74 +76,69 @@ public class CommandManager
         }
     }
 
-    private void checkArguments(Method method)
-    {
-        for (Parameter parameter : method.getParameters())
-        {
+    private void checkArguments(Method method) {
+        for (Parameter parameter : method.getParameters()) {
             Class<?> type = parameter.getType();
 
             Checks.check(ARGUMENTS_TYPE.get(type) != null, "Invalid argument type: " + type.getName());
         }
     }
 
-    private void register(JDACommand command)
-    {
+    private void register(JDACommand command) {
         commands.put(command.name().toLowerCase(), command);
 
-        for (String alias : command.alias())
-        {
+        for (String alias : command.alias()) {
             commandAlias.put(alias.toLowerCase(), command);
         }
 
         LOGGER.info("Registered " + command.toString() + ".");
     }
 
-    public void unregister(String commandName)
-    {
+    public void unregister(String commandName) {
         JDACommand command = commands.get(commandName);
 
-        if (command != null)
-        {
+        if (command != null) {
             unregister(command);
         }
     }
 
-    public void unregister(JDACommand command)
-    {
+    public void unregister(JDACommand command) {
         Checks.notNull(command, "command");
 
         commands.remove(command.name());
 
-        for (String alias : command.alias())
-        {
+        for (String alias : command.alias()) {
             String s = alias.toLowerCase();
 
-            while (commands.get(s) != null)
-            {
+            while (commands.get(s) != null) {
                 commands.remove(s);
             }
         }
     }
 
-    public boolean executeCommand(Message message)
-    {
+    public boolean executeCommand(Message message) {
         Checks.notNull(message, "message");
 
         String prefix = Cerebrum.PREFIX;
-        if (!message.getContentRaw().startsWith(prefix)) { return false; }
+        if (!message.getContentRaw().startsWith(prefix)) {
+            return false;
+        }
 
         String content = message.getContentRaw().substring(prefix.length());
         String[] split = content.split(" ");
 
-        if (content.isEmpty() || split.length == 0 || split[0].isEmpty()) { return false; }
+        if (content.isEmpty() || split.length == 0 || split[0].isEmpty()) {
+            return false;
+        }
 
         String commandName = split[0].toLowerCase();
         JDACommand command = commands.get(commandName);
 
-        if (command == null)
-        {
+        if (command == null) {
             command = commandAlias.get(commandName);
-            if (command == null) { return false; }
+            if (command == null) {
+                return false;
+            }
         }
 
         LOGGER.info("{} issued command: \"{}\"", message.getAuthor().getName(), message.getContentRaw());
@@ -164,25 +149,20 @@ public class CommandManager
                 .map(p -> p.getType() == String[].class ? args : ARGUMENTS_TYPE.get(p.getType()).apply(message))
                 .toArray(Object[]::new);
 
-        try
-        {
+        try {
             command.method().invoke(command.object(), parameters);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             LOGGER.error("Error while dispatching command {}", command, e);
         }
 
         return true;
     }
 
-    public Collection<JDACommand> getCommands()
-    {
+    public Collection<JDACommand> getCommands() {
         return Collections.unmodifiableCollection(commands.values());
     }
 
-    private static <T> void registerArgumentType(Class<T> clazz, Function<Message, T> function)
-    {
+    private static <T> void registerArgumentType(Class<T> clazz, Function<Message, T> function) {
         ARGUMENTS_TYPE.put(clazz, function);
     }
 }

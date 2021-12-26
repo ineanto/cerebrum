@@ -6,11 +6,9 @@ package fr.antoinerochas.cerebrum.console;
  * @author Aro at/on 02/03/2020
  * @since 1.0
  */
-public class CLIStop implements CLICommand
-{
+public class CLIStop implements CLICommand {
     @Override
-    public void execute()
-    {
+    public void execute() {
         System.exit(0);
     }
 }

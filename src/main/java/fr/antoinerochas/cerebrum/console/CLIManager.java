@@ -12,8 +12,7 @@ import java.util.HashMap;
  * @since 1.0
  */
 // TODO: 02/03/2020 Documentation.
-public class CLIManager
-{
+public class CLIManager {
     /**
      * Log4J's {@link Logger} instance.
      */
@@ -24,18 +23,15 @@ public class CLIManager
      */
     public static final HashMap<String, CLICommand> COMMANDS = new HashMap<>();
 
-    public void registerCommand(final String label, final CLICommand command)
-    {
+    public void registerCommand(final String label, final CLICommand command) {
         // Put the command into the HashMap.
         COMMANDS.putIfAbsent(label, command);
     }
 
-    public void fetchAndExecute(final String label)
-    {
+    public void fetchAndExecute(final String label) {
         // Get the command.
         final CLICommand command = getCommand(label);
-        if (command != null)
-        {
+        if (command != null) {
             // And execute it.
             command.execute();
             return;
@@ -44,8 +40,7 @@ public class CLIManager
         LOGGER.error("Unknown command \"" + label + "\", type \"help\" for help.");
     }
 
-    public CLICommand getCommand(final String label)
-    {
+    public CLICommand getCommand(final String label) {
         // Get the command from the HashMap.
         return COMMANDS.get(label);
     }

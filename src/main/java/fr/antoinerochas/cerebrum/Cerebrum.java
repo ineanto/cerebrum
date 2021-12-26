@@ -36,8 +36,7 @@ import java.util.Scanner;
  * @author Aro at/on 27/01/2020
  * @since 1.0
  */
-public class Cerebrum
-{
+public class Cerebrum {
     /**
      * Log4J's {@link Logger} instance.
      * <p>
@@ -140,11 +139,9 @@ public class Cerebrum
      *
      * @param args arguments
      */
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args) throws IOException {
         // Check for the debugging flag.
-        if (args.length > 0 && args[0].equals(debugFlag))
-        {
+        if (args.length > 0 && args[0].equals(debugFlag)) {
             DEBUG = true;
             Configurator.setRootLevel(Level.DEBUG);
             LOGGER.debug("Debug Mode has been enabled. " + APP + " will not use");
@@ -164,8 +161,7 @@ public class Cerebrum
         final JDAManager jdaManager = new JDAManager(eventWaiter = new EventWaiter(), configManager);
 
         // Try to connect to JDA.
-        try
-        {
+        try {
             // Connection succeeded!
             jda = jdaManager.login();
             configManager.setJda(jda);
@@ -175,8 +171,7 @@ public class Cerebrum
             LOGGER.info("Validating channels...");
             final String guildId = configManager.getGuildId();
             GUILD = jda.getGuildById(guildId);
-            if (GUILD == null)
-            {
+            if (GUILD == null) {
                 LOGGER.error("Can't find Guild/Server with ID: ${GUILDID}!".replace("${GUILDID}", guildId));
                 System.exit(-1);
                 return;
@@ -184,13 +179,11 @@ public class Cerebrum
             LOGGER.info("Guild found (name=\"${GUILD}\", id=${GUILDID}).".replace("${GUILD}", GUILD.getName()).replace("${GUILDID}", guildId));
 
             // Getting channels from the configuration.
-            if (configManager.getLogChannelId().isEmpty())
-            {
+            if (configManager.getLogChannelId().isEmpty()) {
                 LOGGER.warn("Log channel hasn't been defined. Cerebrum will not log activity.");
             }
 
-            if (configManager.getOrderChannelId().isEmpty())
-            {
+            if (configManager.getOrderChannelId().isEmpty()) {
                 LOGGER.info("Order channel's not been set. Please configure one before proceeding.");
                 System.exit(-1);
                 return;
@@ -215,6 +208,7 @@ public class Cerebrum
             // Send a log message.
             ComplexEmbed embed = new ComplexEmbed(configManager.getLogChannel());
             embed.setColor(Color.GREEN);
+            embed.setMessageReplace("Cerebrum");
             embed.setTitle(Messages.App.START);
             embed.send();
 
@@ -228,16 +222,13 @@ public class Cerebrum
             Runtime.getRuntime().addShutdownHook(new Thread(Cerebrum::exit));
 
             // While the bot is running...
-            while (RUNNING)
-            {
+            while (RUNNING) {
                 // ...scan user's input for "stop".
                 final Scanner scanner = new Scanner(System.in);
                 final String input = scanner.nextLine();
                 cliManager.fetchAndExecute(input);
             }
-        }
-        catch (LoginException | InterruptedException ex)
-        {
+        } catch (LoginException | InterruptedException ex) {
             // Connection failed, log and
             // proceed to terminate the Bot.
             LOGGER.error("Failed to get JDA instance!", ex);
@@ -248,8 +239,7 @@ public class Cerebrum
     /**
      * Reloads {@code Cerebrum}, the configuration and database.
      */
-    public static void reload() throws IOException
-    {
+    public static void reload() throws IOException {
         LOGGER.info("Reloading Cerebrum...");
         userManager.saveAll();
         configManager.loadConfiguration();
@@ -259,8 +249,7 @@ public class Cerebrum
     /**
      * Gracefully exits {@code Cerebrum}.
      */
-    private static void exit()
-    {
+    private static void exit() {
         RUNNING = false;
         // Logging and then stop.
         LOGGER.info("Stopping Cerebrum...");
@@ -274,8 +263,7 @@ public class Cerebrum
      *
      * @return {@link JDA}'s instance
      */
-    public static JDA getJDA()
-    {
+    public static JDA getJDA() {
         return jda;
     }
 
@@ -284,8 +272,7 @@ public class Cerebrum
      *
      * @return {@link OrderManager}'s instance
      */
-    public static OrderManager getOrderManager()
-    {
+    public static OrderManager getOrderManager() {
         return orderManager;
     }
 
@@ -294,8 +281,7 @@ public class Cerebrum
      *
      * @return {@link UserManager}'s instance
      */
-    public static UserManager getUserManager()
-    {
+    public static UserManager getUserManager() {
         return userManager;
     }
 
@@ -304,8 +290,7 @@ public class Cerebrum
      *
      * @return {@link ConfigManager}'s instance
      */
-    public static ConfigManager getConfigManager()
-    {
+    public static ConfigManager getConfigManager() {
         return configManager;
     }
 
@@ -314,22 +299,25 @@ public class Cerebrum
      *
      * @return {@link CommandManager}'s instance
      */
-    public static CommandManager getCommandManager() { return commandManager; }
+    public static CommandManager getCommandManager() {
+        return commandManager;
+    }
 
     /**
      * Get {@link CLIManager}'s instance.
      *
      * @return {@link CLIManager}'s instance
      */
-    public static CLIManager getCLIManager() { return cliManager; }
+    public static CLIManager getCLIManager() {
+        return cliManager;
+    }
 
     /**
      * Get {@link ReactionManager}'s instance.
      *
      * @return {@link ReactionManager}'s instance
      */
-    public static ReactionManager getReactionManager()
-    {
+    public static ReactionManager getReactionManager() {
         return reactionManager;
     }
 
@@ -338,8 +326,7 @@ public class Cerebrum
      *
      * @return {@link EventWaiter}'s instance
      */
-    public static EventWaiter getEventWaiter()
-    {
+    public static EventWaiter getEventWaiter() {
         return eventWaiter;
     }
 }

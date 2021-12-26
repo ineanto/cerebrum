@@ -13,8 +13,7 @@ import java.util.HashMap;
  * @author aro on 17/03/2020
  * @since 1.0
  */
-public class StepManager
-{
+public class StepManager {
     /**
      * Log4J's {@link Logger} instance.
      */
@@ -30,8 +29,7 @@ public class StepManager
      */
     private final HashMap<Integer, Class<? extends Step>> steps = new HashMap<>();
 
-    public StepManager()
-    {
+    public StepManager() {
         registerStep(TypeStep.class);
     }
 
@@ -40,8 +38,7 @@ public class StepManager
      *
      * @param step the step
      */
-    public void registerStep(Class<? extends Step> step)
-    {
+    public void registerStep(Class<? extends Step> step) {
         final int position = positions.size() + 1;
         LOGGER.info("Registering new Step: " + step.getSimpleName() + " with pos.: " + position);
         positions.put(step, positions.size() + 1);
@@ -54,8 +51,7 @@ public class StepManager
      * @param step the step
      * @return the step's position
      */
-    public int getStepPosition(Class<? extends Step> step)
-    {
+    public int getStepPosition(Class<? extends Step> step) {
         return positions.get(step);
     }
 
@@ -65,8 +61,7 @@ public class StepManager
      * @param position the position
      * @return the next {@link Step} instance
      */
-    public <T> T getNextStep(int position)
-    {
+    public <T> T getNextStep(int position) {
         return (T) steps.get(position + 1);
     }
 }

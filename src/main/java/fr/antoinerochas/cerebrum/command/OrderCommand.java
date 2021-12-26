@@ -12,11 +12,9 @@ import net.dv8tion.jda.api.entities.User;
  * @since 1.0
  */
 @Command(label = "order")
-public class OrderCommand
-{
+public class OrderCommand {
     @CommandExecutor
-    public void execute(User user)
-    {
+    public void execute(User user) {
         //final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
         Cerebrum.getOrderManager().startOrderProcess(user);
     }

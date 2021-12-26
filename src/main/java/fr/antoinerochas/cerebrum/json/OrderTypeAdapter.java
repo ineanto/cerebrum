@@ -18,16 +18,14 @@ import java.io.IOException;
  * @author Aro at/on 26/02/2020
  * @since 1.0
  */
-public class OrderTypeAdapter extends TypeAdapter<Order>
-{
+public class OrderTypeAdapter extends TypeAdapter<Order> {
     /**
      * Log4J's {@link Logger} instance.
      */
     public static final Logger LOGGER = LogManager.getLogger(OrderTypeAdapter.class);
 
     @Override
-    public void write(JsonWriter out, Order value) throws IOException
-    {
+    public void write(JsonWriter out, Order value) throws IOException {
         out.beginArray();
         out.name("customer").value(value.getCustomerId());
         out.name("type").value(value.getType().ordinal());
@@ -39,8 +37,7 @@ public class OrderTypeAdapter extends TypeAdapter<Order>
     }
 
     @Override
-    public Order read(JsonReader in) throws IOException
-    {
+    public Order read(JsonReader in) throws IOException {
         Order defaultOrder = OrderManager.DEFAULT_ORDER;
         String customer = defaultOrder.getCustomerId(), description = defaultOrder.getDescription();
         OrderType type = defaultOrder.getType();
@@ -48,8 +45,7 @@ public class OrderTypeAdapter extends TypeAdapter<Order>
         long ordered = defaultOrder.getOrdered(), deadline = defaultOrder.getDeadline();
 
         in.beginArray();
-        while (in.hasNext())
-        {
+        while (in.hasNext()) {
             customer = in.nextString();
             type = OrderType.values()[in.nextInt()];
             description = in.nextString();

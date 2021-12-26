@@ -12,8 +12,7 @@ import java.io.InputStream;
  * @author Aro at/on 28/01/2020
  * @since 1.0
  */
-public enum Language
-{
+public enum Language {
     /**
      * The English language.
      */
@@ -44,8 +43,7 @@ public enum Language
      *
      * @param code the language's code
      */
-    Language(String code)
-    {
+    Language(String code) {
         // Setting the code.
         this.code = code;
         final String fileName = "/i18n/%s.json".formatted(getCode());
@@ -57,8 +55,7 @@ public enum Language
      *
      * @return the language's code
      */
-    public String getCode()
-    {
+    public String getCode() {
         return code;
     }
 
@@ -67,8 +64,7 @@ public enum Language
      *
      * @return the language's file stream
      */
-    public InputStream getStream()
-    {
+    public InputStream getStream() {
         return stream;
     }
 }

@@ -1,9 +1,8 @@
 package fr.antoinerochas.cerebrum.order.framework;
 
 import fr.antoinerochas.cerebrum.embed.EmbedMaker;
-import fr.antoinerochas.cerebrum.i18n.Messages;
 import fr.antoinerochas.cerebrum.i18n.I18N;
-import fr.antoinerochas.cerebrum.i18n.Language;
+import fr.antoinerochas.cerebrum.i18n.Messages;
 import fr.antoinerochas.cerebrum.order.Order;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
 import fr.antoinerochas.cerebrum.utils.Color;
@@ -17,8 +16,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
  * @author aro on 17/03/2020
  * @since 1.0
  */
-public abstract class Step
-{
+public abstract class Step {
     /**
      * The channel.
      */
@@ -51,8 +49,7 @@ public abstract class Step
      * @param order   the order
      * @param user    the user
      */
-    public Step(MessageChannel channel, Order order, CerebrumUser user)
-    {
+    public Step(MessageChannel channel, Order order, CerebrumUser user) {
         this.channel = channel;
         this.order = order;
         this.user = user;
@@ -102,8 +99,7 @@ public abstract class Step
      * @param order the order
      * @param user  the user
      */
-    public void panic(Order order, CerebrumUser user)
-    {
+    public void panic(Order order, CerebrumUser user) {
         EmbedMaker.make(Color.RED, I18N.get(user.getUserLanguage(), Messages.Global.ERROR), I18N.get(user.getUserLanguage(), Messages.Global.ERROR_DESC));
     }
 
@@ -112,8 +108,7 @@ public abstract class Step
      *
      * @return if the check passed
      */
-    public boolean check()
-    {
+    public boolean check() {
         return user != null && order != null;
     }
 
@@ -122,8 +117,7 @@ public abstract class Step
      *
      * @return {@link Boolean#TRUE} if it is, {@link Boolean#FALSE} otherwise.
      */
-    public boolean isLast()
-    {
+    public boolean isLast() {
         return last;
     }
 
@@ -132,28 +126,23 @@ public abstract class Step
      */
     public void setLast() { this.last = true; }
 
-    public Message getMessage()
-    {
+    public Message getMessage() {
         return message;
     }
 
-    public MessageChannel getChannel()
-    {
+    public MessageChannel getChannel() {
         return channel;
     }
 
-    public void setMessage(Message message)
-    {
+    public void setMessage(Message message) {
         this.message = message;
     }
 
-    public Order getOrder()
-    {
+    public Order getOrder() {
         return order;
     }
 
-    public CerebrumUser getUser()
-    {
+    public CerebrumUser getUser() {
         return user;
     }
 }

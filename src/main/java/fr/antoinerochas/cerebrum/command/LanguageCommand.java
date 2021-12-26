@@ -24,11 +24,9 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 @Command(label = "language")
-public class LanguageCommand
-{
+public class LanguageCommand {
     @CommandExecutor
-    public void execute(User user)
-    {
+    public void execute(User user) {
         final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
         final PrivateChannel channel = user.openPrivateChannel().complete();
 
@@ -49,8 +47,7 @@ public class LanguageCommand
         channel.delete().complete();
     }
 
-    private void updateLanguage(User user, Message message, Language language)
-    {
+    private void updateLanguage(User user, Message message, Language language) {
         final CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
         final PrivateChannel channel = user.openPrivateChannel().complete();
 

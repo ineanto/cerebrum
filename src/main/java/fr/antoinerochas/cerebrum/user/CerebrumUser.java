@@ -13,8 +13,7 @@ import java.util.ArrayList;
  * @author Aro at/on 27/02/2020
  * @since 1.0
  */
-public class CerebrumUser
-{
+public class CerebrumUser {
     /**
      * Represent user's Discord id.
      */
@@ -35,8 +34,7 @@ public class CerebrumUser
      */
     private long lastOrdered;
 
-    public CerebrumUser(String id, int language, ArrayList<Order> orders, long lastOrdered)
-    {
+    public CerebrumUser(String id, int language, ArrayList<Order> orders, long lastOrdered) {
         this.id = id;
         this.language = language;
         this.orders = orders;
@@ -48,61 +46,50 @@ public class CerebrumUser
      *
      * @return {@link Boolean#TRUE} if it is, {@link Boolean#FALSE} otherwise
      */
-    public boolean isOperator()
-    {
+    public boolean isOperator() {
         return Cerebrum.getConfigManager().getOperatorsIds().contains(id) || getId().equals(Cerebrum.OWNER);
     }
 
-    public Language getUserLanguage()
-    {
+    public Language getUserLanguage() {
         return Language.values()[language];
     }
 
-    public int getLanguage()
-    {
+    public int getLanguage() {
         return language;
     }
 
-    public void setLanguage(int language)
-    {
+    public void setLanguage(int language) {
         this.language = language;
     }
 
-    public long getLastOrdered()
-    {
+    public long getLastOrdered() {
         return lastOrdered;
     }
 
-    public void setLastOrdered(long lastOrdered)
-    {
+    public void setLastOrdered(long lastOrdered) {
         this.lastOrdered = lastOrdered;
     }
 
-    public ArrayList<Order> getOrders()
-    {
+    public ArrayList<Order> getOrders() {
         return orders;
     }
 
-    public void setOrders(ArrayList<Order> orders)
-    {
+    public void setOrders(ArrayList<Order> orders) {
         this.orders = orders;
     }
 
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId(String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
     public User getUser() { return Cerebrum.getJDA().getUserById(id); }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "CerebrumUser{" +
                 "id='" + id + '\'' +
                 ", language=" + language +

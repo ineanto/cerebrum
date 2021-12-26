@@ -12,20 +12,17 @@ import java.awt.Color;
  * @author Aro at/on 29/02/2020
  * @since 1.0
  */
-public class EmbedMaker
-{
+public class EmbedMaker {
     public static final MessageEmbed.Field EMPTY_FIELD = new MessageEmbed.Field("\u200e", "\u200e", false);
 
-    public static MessageEmbed make(Color color, String title, String footer, MessageEmbed.Field... fields)
-    {
+    public static MessageEmbed make(Color color, String title, String footer, MessageEmbed.Field... fields) {
         EmbedBuilder builder = new EmbedBuilder();
 
         builder.setColor(color);
         builder.setTitle(title);
         builder.setFooter(footer);
 
-        for (MessageEmbed.Field field : fields)
-        {
+        for (MessageEmbed.Field field : fields) {
             builder.addField(field);
         }
 

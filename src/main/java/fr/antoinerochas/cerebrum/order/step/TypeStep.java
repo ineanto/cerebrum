@@ -14,8 +14,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
  * @author aro on 17/03/2020
  * @since 1.0
  */
-public class TypeStep extends Step
-{
+public class TypeStep extends Step {
     /**
      * Constructor.
      *
@@ -23,21 +22,18 @@ public class TypeStep extends Step
      * @param order   the order
      * @param user    the user
      */
-    public TypeStep(MessageChannel channel, Order order, CerebrumUser user)
-    {
+    public TypeStep(MessageChannel channel, Order order, CerebrumUser user) {
         super(channel, order, user);
     }
 
     @Override
-    public String name()
-    {
+    public String name() {
         return "type";
     }
 
     @Override
-    public void before(Order order, CerebrumUser user)
-    {
-        if(!check()) panic(order, user);
+    public void before(Order order, CerebrumUser user) {
+        if (!check()) panic(order, user);
         final ComplexEmbed embed = new ComplexEmbed(getChannel(), user);
         embed.setTitle(I18N.get(user, Messages.Order.TYPE_MSG));
         embed.send();
@@ -45,13 +41,11 @@ public class TypeStep extends Step
     }
 
     @Override
-    public void process(Order order, CerebrumUser user)
-    {
+    public void process(Order order, CerebrumUser user) {
     }
 
     @Override
-    public void after(Order order, CerebrumUser user)
-    {
+    public void after(Order order, CerebrumUser user) {
 
     }
 }

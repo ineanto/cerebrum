@@ -21,8 +21,7 @@ import java.util.HashMap;
  * @author Aro at/on 28/01/2020
  * @since 1.0
  */
-public class I18N
-{
+public class I18N {
     /**
      * Bot's default language.
      */
@@ -40,19 +39,17 @@ public class I18N
      * @param key the value's key
      * @return the {@link String} value linked to the key
      */
-    public static String get(Language language, String key, String... replace)
-    {
+    public static String get(Language language, String key, String... replace) {
         if (language == null) language = I18N.DEFAULT_LANGUAGE;
         if (key == null) { return null; }
 
         LOGGER.debug("I18N Fetch (l=" + language.getCode() + ",k=" + key + ")...");
 
         // Instantiate an HashMap type.
-        final Type hashMapType = new TypeToken<HashMap<String, String>>() {}.getType();
+        final Type hashMapType = new TypeToken<HashMap<String, String>>() { }.getType();
 
         // Try to create a reader from the language file.
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(language.getStream())))
-        {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(language.getStream()))) {
             // Read the JSON file and convert its contents into an HashMap.
             final HashMap<String, String> map = GsonManager.loadFile(reader, hashMapType);
 
@@ -60,8 +57,7 @@ public class I18N
             String value = map.get(key);
 
             // If the key is null, return the key and give an error in console.
-            if (value == null)
-            {
+            if (value == null) {
                 LOGGER.error("\"" + key + "\" can't be found in " + language.getCode() + " (" + language.getCode() + "), skipping");
                 return "Not Found! (" + key + " in " + language.getCode() + ")";
             }
@@ -69,18 +65,14 @@ public class I18N
             // Log if succeeded.
             LOGGER.debug("Success.");
 
-            if (replace != null && replace.length != 0)
-            {
-                for (int i = 0; i < replace.length; i++)
-                {
+            if (replace != null && replace.length != 0) {
+                for (int i = 0; i < replace.length; i++) {
                     value = value.replace("{" + i + "}", replace[i]);
                 }
             }
 
             return value;
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             // If we fail I/O notify the user and stop the application
             LOGGER.error("Failed to read I18N file (" + language.getCode() + ")!", ex);
             return "MISSING_KEY:" + language.getCode() + "/" + key;
@@ -95,8 +87,7 @@ public class I18N
      * @param key the value's key
      * @return the {@link String} value linked to the key
      */
-    public static String get(String key)
-    {
+    public static String get(String key) {
         // Same, but default the language to English.
         return get(Language.ENGLISH, key);
     }
@@ -109,8 +100,7 @@ public class I18N
      * @param key the value's key
      * @return the {@link String} value linked to the key
      */
-    public static String get(CerebrumUser user, String key)
-    {
+    public static String get(CerebrumUser user, String key) {
         // Same, but default the language to English.
         return get(getUserLanguage(user.getUser()), key);
     }
@@ -121,8 +111,7 @@ public class I18N
      * @param user the user
      * @return user's language
      */
-    public static Language getUserLanguage(User user)
-    {
+    public static Language getUserLanguage(User user) {
         CerebrumUser cerebrumUser = Cerebrum.getUserManager().getUser(user);
 
         // By default, return the English language.

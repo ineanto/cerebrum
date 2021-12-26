@@ -16,8 +16,7 @@ import java.lang.reflect.Type;
  * @author Aro at/on 28/01/2020
  * @since 1.0
  */
-public class GsonManager
-{
+public class GsonManager {
     /**
      * Log4J's {@link Logger} instance.
      */
@@ -37,8 +36,7 @@ public class GsonManager
      * @param <T>    the {@link Object}'s type.
      * @return the file as a {@code T} object
      */
-    public static <T> T loadFile(Reader reader, Type type)
-    {
+    public static <T> T loadFile(Reader reader, Type type) {
         // Return the mapped file as an Object.
         return GSON.fromJson(reader, type);
     }

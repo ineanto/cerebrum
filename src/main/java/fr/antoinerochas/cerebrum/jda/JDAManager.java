@@ -23,8 +23,7 @@ import java.util.EnumSet;
  * @author Aro at/on 27/01/2020
  * @since 1.0
  */
-public class JDAManager
-{
+public class JDAManager {
     /**
      * Log4J's {@link Logger} instance.
      */
@@ -53,11 +52,10 @@ public class JDAManager
     /**
      * Constructor.
      *
-     * @param eventWaiter the {@link EventWaiter} instance
+     * @param eventWaiter   the {@link EventWaiter} instance
      * @param configManager the {@link ConfigManager} instance
      */
-    public JDAManager(EventWaiter eventWaiter, ConfigManager configManager)
-    {
+    public JDAManager(EventWaiter eventWaiter, ConfigManager configManager) {
         this.eventWaiter = eventWaiter;
         this.configManager = configManager;
     }
@@ -69,8 +67,7 @@ public class JDAManager
      * @throws LoginException       if the token is not valid or Discord is not available
      * @throws InterruptedException if {@link JDA}'s build is interrupted
      */
-    public JDA login() throws LoginException, InterruptedException
-    {
+    public JDA login() throws LoginException, InterruptedException {
         // Get the envar value.
         LOGGER.debug("Checking for the envar...");
         String token = System.getenv(envar);
@@ -80,8 +77,7 @@ public class JDAManager
         token = configManager.getToken();
 
         // If the envar is null, exit.
-        if (token == null || token.equals("token"))
-        {
+        if (token == null || token.equals("token")) {
             LOGGER.error("Token can't be found.");
             System.exit(-1);
         }

@@ -12,22 +12,17 @@ import java.io.IOException;
  * @author Aro at/on 02/03/2020
  * @since 1.0
  */
-public class CLIReload implements CLICommand
-{
+public class CLIReload implements CLICommand {
     /**
      * Log4J's {@link Logger} instance.
      */
     public static final Logger LOGGER = LogManager.getLogger(CLIReload.class);
 
     @Override
-    public void execute()
-    {
-        try
-        {
+    public void execute() {
+        try {
             Cerebrum.reload();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             LOGGER.error("Failed to reload!", e);
         }
     }

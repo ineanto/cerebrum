@@ -8,8 +8,7 @@ package fr.antoinerochas.cerebrum.order;
  * @author Aro at/on 28/01/2020
  * @since 1.0
  */
-public enum OrderStatus
-{
+public enum OrderStatus {
     /**
      * The default status. Cerebrum will be able to take orders
      * and send/store them in the official production database.
