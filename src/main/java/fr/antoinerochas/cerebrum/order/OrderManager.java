@@ -2,7 +2,6 @@ package fr.antoinerochas.cerebrum.order;
 
 import fr.antoinerochas.cerebrum.Cerebrum;
 import fr.antoinerochas.cerebrum.embed.ComplexEmbed;
-import fr.antoinerochas.cerebrum.i18n.I18N;
 import fr.antoinerochas.cerebrum.i18n.Messages;
 import fr.antoinerochas.cerebrum.order.framework.StepManager;
 import fr.antoinerochas.cerebrum.user.CerebrumUser;
@@ -32,7 +31,7 @@ public class OrderManager
     /**
      * Represents the default {@link Order}.
      */
-    public static final Order DEFAULT_ORDER = new Order(I18N.get(Messages.Global.NULL), OrderType.OTHER, I18N.get(Messages.Global.NULL), -1, -1, -1);
+    public static final Order DEFAULT_ORDER = new Order(null, OrderType.OTHER, null, -1, -1, -1);
 
     /**
      * The {@link JDA} instance.
