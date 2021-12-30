@@ -200,15 +200,14 @@ public class Cerebrum {
             // Set and load ReactionManager instance.
             reactionManager = new ReactionManager();
 
-            commandManager.register(new OrderCommand());
-            commandManager.register(new LanguageCommand());
+            commandManager.registerAll(new LanguageCommand(), new OrderCommand());
             cliManager.registerCommand("stop", new CLIStop());
             cliManager.registerCommand("reload", new CLIReload());
 
             // Send a log message.
             ComplexEmbed embed = new ComplexEmbed(configManager.getLogChannel());
             embed.setColor(Color.GREEN);
-            embed.setMessageReplace("Cerebrum");
+            embed.setTitleReplace("Cerebrum");
             embed.setTitle(Messages.App.START);
             embed.send();
 

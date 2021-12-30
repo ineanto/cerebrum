@@ -30,9 +30,12 @@ public class ComplexEmbed {
     public ComplexEmbed(MessageChannel channel, CerebrumUser user) {
         this.channel = channel;
         this.user = user;
+        this.messageReplace = new String[]{};
+        this.titleReplace = new String[]{};
+        this.descriptionReplace = new String[]{};
     }
 
-    public ComplexEmbed(MessageChannel channel) { this.channel = channel; }
+    public ComplexEmbed(MessageChannel channel) { this(channel, null); }
 
     public Color getColor() {
         return color;
@@ -115,10 +118,23 @@ public class ComplexEmbed {
     }
 
     public void send() {
-        final String name = description == null ? "NULL! (Description)" : I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), description, descriptionReplace);
-        final String value = message == null ? "NULL! (Message)" : I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), message, messageReplace);
-        final String titlei18n = I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), title, titleReplace);
-        final MessageEmbed.Field field = new MessageEmbed.Field(name, value, true);
+        String message = this.message == null ? "NULL! (Message)" : I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), this.message, messageReplace);
+        String description = this.description == null ? "NULL! (Description)" : I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), this.description, descriptionReplace);
+        String titlei18n = I18N.get(user == null ? I18N.DEFAULT_LANGUAGE : user.getUserLanguage(), title, titleReplace);
+
+        for (int i = 0; i < messageReplace.length; i++) {
+            message = message.replace("{" + i + "}", messageReplace[i]);
+        }
+
+        for (int i = 0; i < descriptionReplace.length; i++) {
+            description = description.replace("{" + i + "}", descriptionReplace[i]);
+        }
+
+        for (int i = 0; i < titleReplace.length; i++) {
+            titlei18n = titlei18n.replace("{" + i + "}", titleReplace[i]);
+        }
+
+        final MessageEmbed.Field field = new MessageEmbed.Field(description, message, true);
         final MessageEmbed embed = EmbedMaker.make(color, titlei18n, null, field);
         final MessageAction messageAction = channel.sendMessageEmbeds(embed);
 
