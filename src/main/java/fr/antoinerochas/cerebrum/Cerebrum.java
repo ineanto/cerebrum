@@ -1,8 +1,8 @@
 package fr.antoinerochas.cerebrum;
 
 import fr.antoinerochas.cerebrum.command.LanguageCommand;
-import fr.antoinerochas.cerebrum.command.framework.CommandManager;
 import fr.antoinerochas.cerebrum.command.OrderCommand;
+import fr.antoinerochas.cerebrum.command.framework.CommandManager;
 import fr.antoinerochas.cerebrum.config.ConfigManager;
 import fr.antoinerochas.cerebrum.console.CLIManager;
 import fr.antoinerochas.cerebrum.console.CLIReload;
@@ -20,7 +20,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
@@ -143,7 +145,11 @@ public class Cerebrum {
         // Check for the debugging flag.
         if (args.length > 0 && args[0].equals(debugFlag)) {
             DEBUG = true;
-            Configurator.setRootLevel(Level.DEBUG);
+            LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+            Configuration config = ctx.getConfiguration();
+            LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+            loggerConfig.setLevel(Level.DEBUG);
+            ctx.updateLoggers();
             LOGGER.debug("Debug Mode has been enabled. " + APP + " will not use");
             LOGGER.debug("the production database and will not save orders.");
             LOGGER.debug("(You can disable Debug Mode by removing the \"-debug\" flag.)");
