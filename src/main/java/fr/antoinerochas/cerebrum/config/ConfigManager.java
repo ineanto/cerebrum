@@ -159,7 +159,7 @@ public class ConfigManager {
 
         // Try to create a reader from the language file.
         try (BufferedReader reader = new BufferedReader(new FileReader(configuration))) {
-            // Read the JSON file and convert it's contents into an HashMap.
+            // Read the JSON file and convert its contents into an HashMap.
             final HashMap<String, Object> map = GsonManager.loadFile(reader, hashMapType);
 
             // Get the value from the Map according to the key.
@@ -175,6 +175,7 @@ public class ConfigManager {
             }
 
             // Else, return the value.
+            reader.close();
             return value;
         } catch (IOException ex) {
             // If we fail I/O notify the user and stop the application

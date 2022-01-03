@@ -134,12 +134,15 @@ public class UserManager {
             final File userFile = getUserFile(user);
             final boolean validUserData = createUserData(user);
             if (validUserData) {
-                try {
-                    CerebrumUser cerebrumUser = GsonManager.loadFile(new BufferedReader(new FileReader(userFile)), CerebrumUser.class);
+                try (BufferedReader reader = new BufferedReader(new FileReader(userFile))) {
+                    CerebrumUser cerebrumUser = GsonManager.loadFile(reader, CerebrumUser.class);
                     users.put(cerebrumUser.getId(), cerebrumUser);
                     LOGGER.info("Successfully loaded user " + user.getId());
                 } catch (FileNotFoundException e) {
-                    LOGGER.error("Failed to load user " + user.getId() + "!", e);
+                    LOGGER.error("Failed to load user (FNFE) " + user.getId() + "!", e);
+                    System.exit(-1);
+                } catch (IOException e) {
+                    LOGGER.error("Failed to load user (IOE) " + user.getId() + "!", e);
                     System.exit(-1);
                 }
             }

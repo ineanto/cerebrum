@@ -71,6 +71,7 @@ public class I18N {
                 }
             }
 
+            reader.close();
             return value;
         } catch (IOException ex) {
             // If we fail I/O notify the user and stop the application
