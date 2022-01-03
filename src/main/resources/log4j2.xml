@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{[%d{dd-MM-yyyy HH:mm:ss}/%level] [*] %c{1}:%L - %m%n}{FATAL=red, ERROR=red, WARN=yellow, DEBUG=yellow, TRACE=blue}" />
+        </Console>
+        <File name="LogFile" fileName="logs/cerebrum-${date:dd-MM-yyyy}.log" immediateFlush="false" append="false">
+            <PatternLayout pattern="[%d{dd-MM-yyyy HH:mm:ss}/%level] %c{1}:%L - %m%n"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="LogFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
+
