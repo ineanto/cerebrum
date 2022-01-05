@@ -157,7 +157,7 @@ public class Cerebrum {
 
         // Launch Cerebrum.
         LOGGER.info("Starting " + APP + " " + VERSION + "...");
-        LOGGER.info("Copyright (c) 2020-2021 Antoine \"Aro\" ROCHAS.");
+        LOGGER.info("Copyright (c) 2020-2022 Antoine \"Aro\" ROCHAS.");
 
         // Instantiate ConfigManager.
         configManager = new ConfigManager();
