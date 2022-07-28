@@ -71,7 +71,7 @@ public class JDAManager {
         // Get the envar value.
         LOGGER.debug("Checking for the envar...");
         String token = System.getenv(envar);
-        LOGGER.debug(token == null ? "envar found!" : "envar not found (ran in IntelliJ ?)...");
+        LOGGER.debug(token == null ? "envar not found, skipping" : "envar found");
 
         LOGGER.info("Reading Token from Configuration file...");
         token = configManager.getToken();
