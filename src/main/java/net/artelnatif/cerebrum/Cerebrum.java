@@ -145,9 +145,9 @@ public class Cerebrum {
         // Check for the debugging flag.
         if (args.length > 0 && args[0].equals(debugFlag)) {
             DEBUG = true;
-            LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-            Configuration config = ctx.getConfiguration();
-            LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+            final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+            final Configuration config = ctx.getConfiguration();
+            final LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
             loggerConfig.setLevel(Level.DEBUG);
             ctx.updateLoggers();
             LOGGER.debug("Debug Mode has been enabled. " + APP + " will not use");
