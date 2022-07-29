@@ -3,6 +3,7 @@ package net.artelnatif.cerebrum.jda.api;
 import net.artelnatif.cerebrum.Cerebrum;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
 
@@ -29,7 +30,7 @@ public class ReactionManager {
     public synchronized void addReactionListener(long guildId, Message message, ReactionListener<?> handler, boolean queue) {
         if (handler == null) { return; }
         if (message.getChannelType().equals(ChannelType.TEXT)) {
-            if (!PermissionUtil.checkPermission(message.getTextChannel(), message.getGuild().getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
+            if (!PermissionUtil.checkPermission(message.getChannel().asTextChannel(), message.getGuild().getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
                 return;
             }
         }
@@ -38,7 +39,7 @@ public class ReactionManager {
         }
         if (!reactions.get(guildId).containsKey(message.getIdLong())) {
             for (String emote : handler.getEmotes()) {
-                RestAction<Void> action = message.addReaction(emote);
+                RestAction<Void> action = message.addReaction(Emoji.fromFormatted(emote));
                 if (queue) action.queue();
                 else action.complete();
             }
@@ -64,10 +65,10 @@ public class ReactionManager {
         if (listener == null) { return; }
         if (!listener.isActive() || listener.getExpiresInTimestamp() < System.currentTimeMillis()) {
             reactions.remove(Cerebrum.GUILD.getIdLong()).remove(messageId);
-        } else if ((listener.hasReaction(reaction.getReactionEmote().getName())) && listener.getUserId() == userId) {
+        } else if ((listener.hasReaction(reaction.getEmoji().getName())) && listener.getUserId() == userId) {
             reactions.get(Cerebrum.GUILD.getIdLong()).get(messageId).updateLastAction();
             Message message = channel.retrieveMessageById(messageId).complete();
-            listener.react(reaction.getReactionEmote().getName(), message);
+            listener.react(reaction.getEmoji().getName(), message);
         }
     }
 
