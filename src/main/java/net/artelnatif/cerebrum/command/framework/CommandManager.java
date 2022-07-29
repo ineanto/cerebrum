@@ -34,7 +34,7 @@ public class CommandManager {
         registerArgumentType(Message.class, m -> m);
         registerArgumentType(User.class, Message::getAuthor);
         registerArgumentType(Member.class, Message::getMember);
-        registerArgumentType(TextChannel.class, Message::getTextChannel);
+        registerArgumentType(Channel.class, Message::getChannel);
         registerArgumentType(Guild.class, Message::getGuild);
         registerArgumentType(JDA.class, Message::getJDA);
         registerArgumentType(String[].class, m -> new String[0]);
