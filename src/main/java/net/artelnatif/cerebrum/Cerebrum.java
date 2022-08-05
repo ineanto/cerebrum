@@ -142,12 +142,17 @@ public class Cerebrum {
      * @param args arguments
      */
     public static void main(String[] args) throws IOException {
+        final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        final Configuration config = ctx.getConfiguration();
+        final LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+
+        // Setting up Logger Level.
+        loggerConfig.setLevel(Level.INFO);
+        ctx.updateLoggers();
+
         // Check for the debugging flag.
         if (args.length > 0 && args[0].equals(debugFlag)) {
             DEBUG = true;
-            final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-            final Configuration config = ctx.getConfiguration();
-            final LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
             loggerConfig.setLevel(Level.DEBUG);
             ctx.updateLoggers();
             LOGGER.debug("Debug Mode has been enabled. " + APP + " will not use");
